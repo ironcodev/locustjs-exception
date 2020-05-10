@@ -12,14 +12,17 @@
     "url": "git+https://github.com/ironcodev/locustjs-exception.git"
   },
   "keywords": [
-     "locustjs",
-     "javascript",
-     "exception",
+    "locustjs",
+    "javascript",
+    "exception"
   ],
   "author": "Iron Code",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ironcodev/locustjs-exception/issues"
   },
-  "homepage": "https://github.com/ironcodev/locustjs-exception#readme"
+  "homepage": "https://github.com/ironcodev/locustjs-exception#readme",
+  "dependencies": {
+    "locustjs-base": "^1.0.5"
+  }
 }

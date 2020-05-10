@@ -1,22 +1,39 @@
-import { isString, isFunction } from 'locustjs-base';
+import { isString, isSomeString, isFunction } from 'locustjs-base';
 import { List } from 'locustjs-collections';
 
 class StackTraceItem {
 	constructor(line) {
-		const colonIndex = line.lastIndexOf(':');
-				
-		colonIndex = line.lastIndexOf(':', colonIndex - 1);
-		
-		const numbers = line.substr(colonIndex + 1).split(':');
-		
-		this.line = numbers.length > 0 ? numbers[0]: 0;
-		this.col = numbers.length > 1 ? numbers[1]: 0;
+		if (isSomeString(line)) {
+			let colonIndex = line.indexOf(':');
+			let openParIndex = line.indexOf('(');
+			if (openParIndex < 0) {
+				openParIndex = colonIndex;
+			}
+			let numbers = line.substr(colonIndex + 1);
+			
+			if (numbers[numbers.length - 1] == ')') {
+				numbers = numbers.substr(0, numbers.length - 1);
+			}
+			
+			numbers = numbers.split(':');
+			
+			this.line = numbers.length > 0 ? numbers[0]: 0;
+			this.col = numbers.length > 1 ? numbers[1]: 0;
+			this.callSite = line.substr(0, openParIndex).replace('at ', '').trim();
+			this.source = line.substr(openParIndex + 1, colonIndex - openParIndex - 1);
+		} else {
+			this.line = 0;
+			this.col = 0;
+			this.callSite = '';
+			this.source = '';
+		}
 	}
 }
 
-class StackTrace extends List {
+class StackTrace {
 	constructor(stack) {
-		super();
+		this.message = '';
+		this.items = new List(StackTraceItem);
 		
 		if (isSomeString(stack)) {
 			const lines = stack.split('\n');
@@ -25,7 +42,7 @@ class StackTrace extends List {
 				this.message = lines[0];
 				
 				for (let i = 1; i < lines.length; i++) {
-					this.add(new StackTraceItem(lines[i]));
+					this.items.add(new StackTraceItem(lines[i]));
 				}
 			}
 		}
@@ -42,8 +59,6 @@ class Exception extends TypeError {
 		if (isString(e)) {
 			this.message = e;
 			this.name = 'Exception';
-			this.callSite = '';
-			this.source = '';
 		} else if (e instanceof TypeError) {
 			this.message = e.message;
 			this.stack = e.stack;
