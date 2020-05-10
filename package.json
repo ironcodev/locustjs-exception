@@ -1,0 +1,25 @@
+{
+  "name": "locustjs-exception",
+  "version": "1.0.0",
+  "description": "This library provides a base Exception class and a TryCatch utlity class with three Try(), Catch() and Finally() functions",
+  "main": "index.cjs.js",
+  "module": "index.esm.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ironcodev/locustjs-exception.git"
+  },
+  "keywords": [
+     "locustjs",
+     "javascript",
+     "exception",
+  ],
+  "author": "Iron Code",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/ironcodev/locustjs-exception/issues"
+  },
+  "homepage": "https://github.com/ironcodev/locustjs-exception#readme"
+}
