@@ -1,4 +1,4 @@
-import { isString, isObject, isNumeric, isEmpty, isFunction, isNull, isDate } from 'locustjs-base';
+import { isString, isSomeString, isObject, isNumeric, isEmpty, isFunction, isNull, isDate } from 'locustjs-base';
 
 class StackTraceItem {
 	constructor(line) {

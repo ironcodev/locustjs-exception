@@ -40,7 +40,7 @@ function _classCallCheck(instance, Constructor) { if (!_instanceof(instance, Con
 var StackTraceItem = function StackTraceItem(line) {
   _classCallCheck(this, StackTraceItem);
 
-  if (isSomeString(line)) {
+  if ((0, _locustjsBase.isSomeString)(line)) {
     var colonIndex = line.indexOf(':');
     var openParIndex = line.indexOf('(');
 
@@ -74,7 +74,7 @@ var StackTrace = function StackTrace(stack) {
 
   this.items = [];
 
-  if (isSomeString(stack)) {
+  if ((0, _locustjsBase.isSomeString)(stack)) {
     var lines = stack.split('\n');
 
     if (lines.length) {
