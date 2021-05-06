@@ -1,5 +1,7 @@
 "use strict";
 
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -8,16 +10,16 @@ exports.throwIfInstantiateAbstract = throwIfInstantiateAbstract;
 exports.throwIfNotInstanceOf = throwIfNotInstanceOf;
 exports.throwIfNull = throwIfNull;
 exports.throwIfEmpty = throwIfEmpty;
+exports.throwIfTypeIncorrect = throwIfTypeIncorrect;
 exports.throwNotImplementedException = throwNotImplementedException;
-exports.Finally = exports.Catch = exports.Try = exports.TryCatch = exports.InvalidHttpMethodException = exports.NotInstanceOfException = exports.ArgumentEmptyException = exports.ArgumentNullException = exports.NotImplementedException = exports.AbstractInstantiationException = exports.PropertyReadOnlyException = exports.StackTrace = exports.StackTraceItem = void 0;
+exports.throwIfIndexOutOfRange = throwIfIndexOutOfRange;
+exports.Finally = exports.Catch = exports.Try = exports.TryCatch = exports.IndexOutOfRangeException = exports.InvalidHttpMethodException = exports.NotInstanceOfException = exports.ArgumentTypeIncorrectException = exports.ArgumentEmptyException = exports.ArgumentNullException = exports.NotImplementedException = exports.AbstractInstantiationException = exports.PropertyReadOnlyException = exports.StackTrace = exports.StackTraceItem = void 0;
 
 var _locustjsBase = require("locustjs-base");
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
-function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
@@ -29,13 +31,11 @@ function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) ===
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
 
-function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
+function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
 function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
 
-function _instanceof(left, right) { if (right != null && typeof Symbol !== "undefined" && right[Symbol.hasInstance]) { return !!right[Symbol.hasInstance](left); } else { return left instanceof right; } }
-
-function _classCallCheck(instance, Constructor) { if (!_instanceof(instance, Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var StackTraceItem = function StackTraceItem(line) {
   _classCallCheck(this, StackTraceItem);
@@ -85,8 +85,8 @@ var StackTrace = function StackTrace(stack) {
   }
 };
 /*
-    examples:
-        new Exception({
+	examples:
+		new Exception({
 			message: '',
 			code: 23,
 			host: '',
@@ -94,8 +94,8 @@ var StackTrace = function StackTrace(stack) {
 			stack: '',
 			inner: new Exception()
 		})
-        new Exception(new TypeError('this is an error'))
-        new Exception(new AnotherException())
+		new Exception(new TypeError('this is an error'))
+		new Exception(new AnotherException())
 */
 
 
@@ -119,7 +119,7 @@ function Exception(settings) {
   var _name = this.constructor.name;
   var _baseName = '';
 
-  if (_instanceof(settings, Error)) {
+  if (settings instanceof Error) {
     _message = settings.message;
     _fileName = settings.fileName;
     _lineNumber = settings.lineNumber;
@@ -133,7 +133,7 @@ function Exception(settings) {
     _code = (0, _locustjsBase.isNumeric)(_settings.code) ? _settings.code : _code;
     _status = (0, _locustjsBase.isString)(_settings.status) ? _settings.status : _status;
     _host = (0, _locustjsBase.isString)(_settings.host) ? _settings.host : _host;
-    _data = (0, _locustjsBase.isObject)(_settings.data) ? _settings.data : _data;
+    _data = _settings.data;
     _date = (0, _locustjsBase.isDate)(_settings.date) ? _settings.date : _date;
     _stack = (0, _locustjsBase.isString)(_settings.stack) ? _settings.stack : _stack;
     _fileName = (0, _locustjsBase.isString)(_settings.fileName) ? _settings.fileName : _fileName;
@@ -142,9 +142,9 @@ function Exception(settings) {
     _baseName = (0, _locustjsBase.isString)(_settings.baseName) ? _settings.baseName : _baseName;
 
     if (_settings.innerException) {
-      if (_instanceof(_settings.innerException, Exception)) {
+      if (_settings.innerException instanceof Exception) {
         _inner = _settings.innerException;
-      } else if (_instanceof(_settings.innerException, Error)) {
+      } else if (_settings.innerException instanceof Error) {
         _inner = new Exception(_settings.innerException);
       } else {
         throw "Exception.ctor: innerException must be an instance of Error or Exception";
@@ -161,178 +161,115 @@ function Exception(settings) {
       if (_stack.startsWith('Error\n')) {
         _stack = _message + '\n' + _stack.substr(7);
       }
-    } catch {}
+    } catch (_unused) {}
   }
 
   _stackTrace = (0, _locustjsBase.isEmpty)(_stack) ? null : new StackTrace(_stack);
+
+  var propertyIsReadOnly = function propertyIsReadOnly(propertyName) {
+    return function (value) {
+      throw new PropertyReadOnlyException(propertyName, _host);
+    };
+  };
+
   Object.defineProperties(this, {
     name: {
       enumerable: true,
       get: function get() {
         return _name;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.name',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.name')
     },
     baseName: {
       enumerable: true,
       get: function get() {
         return _baseName;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.baseName',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.baseName')
     },
     code: {
       enumerable: true,
       get: function get() {
         return _code;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.code',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.code')
     },
     status: {
       enumerable: true,
       get: function get() {
         return _status;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.status',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.status')
     },
     host: {
       enumerable: true,
       get: function get() {
         return _host;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.host',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.host')
     },
     message: {
       enumerable: true,
       get: function get() {
         return _message;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.message',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.message')
     },
     stack: {
       enumerable: true,
       get: function get() {
         return _stack;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.stack',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.stack')
     },
     stackTrace: {
       enumerable: true,
       get: function get() {
         return _stackTrace;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.stackTrace',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.stackTrace')
     },
     innerException: {
       enumerable: true,
       get: function get() {
         return _inner;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.innerException',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.innerException')
     },
     data: {
       enumerable: true,
       get: function get() {
         return _data;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.data',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.data')
     },
     date: {
       enumerable: true,
       get: function get() {
         return _date;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.date',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.date')
     },
     fileName: {
       enumerable: true,
       get: function get() {
         return _fileName;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.fileName',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.fileName')
     },
     lineNumber: {
       enumerable: true,
       get: function get() {
         return _lineNumber;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.lineNumber',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.lineNumber')
     },
     columnNumber: {
       enumerable: true,
       get: function get() {
         return _columnNumber;
       },
-      set: function set(value) {
-        throw new PropertyReadOnlyException({
-          property: 'Exception.columnNumber',
-          host: _host
-        });
-      }
+      set: propertyIsReadOnly('Exception.columnNumber')
     }
   });
 }
@@ -351,7 +288,6 @@ Exception.prototype.toString = function () {
 };
 
 Exception.prototype.flatten = function () {
-  var separator = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '\n';
   var arr = [];
   var current = this;
 
@@ -360,7 +296,7 @@ Exception.prototype.flatten = function () {
     current = current.innerException;
   }
 
-  return current;
+  return arr;
 };
 
 var PropertyReadOnlyException = /*#__PURE__*/function (_Exception) {
@@ -368,18 +304,14 @@ var PropertyReadOnlyException = /*#__PURE__*/function (_Exception) {
 
   var _super = _createSuper(PropertyReadOnlyException);
 
-  function PropertyReadOnlyException(settings) {
+  function PropertyReadOnlyException(propertyName, host) {
     _classCallCheck(this, PropertyReadOnlyException);
 
-    var property = (0, _locustjsBase.isString)(settings) ? settings : '';
-
-    var _settings = Object.assign({}, settings);
-
-    property = (0, _locustjsBase.isEmpty)(property) ? _settings.property : property;
-    property = (0, _locustjsBase.isEmpty)(property) ? '?' : property;
-    _settings.message = (0, _locustjsBase.isEmpty)(_settings.message) ? "property '".concat(property, "' is read-only.") : _settings.message;
-    _settings.status = 'property-readonly';
-    return _super.call(this, _settings);
+    return _super.call(this, {
+      message: "property '".concat(propertyName || '?', "' is read-only."),
+      status: 'property-readonly',
+      host: host
+    });
   }
 
   return PropertyReadOnlyException;
@@ -392,18 +324,14 @@ var AbstractInstantiationException = /*#__PURE__*/function (_Exception2) {
 
   var _super2 = _createSuper(AbstractInstantiationException);
 
-  function AbstractInstantiationException(settings) {
+  function AbstractInstantiationException(type, host) {
     _classCallCheck(this, AbstractInstantiationException);
 
-    var type = (0, _locustjsBase.isString)(settings) ? settings : '';
-
-    var _settings = Object.assign({}, settings);
-
-    type = (0, _locustjsBase.isEmpty)(type) ? _settings.type : type;
-    type = (0, _locustjsBase.isEmpty)(type) ? '?' : type;
-    _settings.message = (0, _locustjsBase.isEmpty)(_settings.message) ? "cannot instantiate from abstract class '".concat(type, "'.") : _settings.message;
-    _settings.status = 'cannot-instantiate-from-abstract';
-    return _super2.call(this, _settings);
+    return _super2.call(this, {
+      message: "cannot instantiate from abstract class '".concat(type || '?', "'."),
+      status: 'cannot-instantiate-from-abstract',
+      host: host
+    });
   }
 
   return AbstractInstantiationException;
@@ -416,18 +344,14 @@ var NotImplementedException = /*#__PURE__*/function (_Exception3) {
 
   var _super3 = _createSuper(NotImplementedException);
 
-  function NotImplementedException(settings) {
+  function NotImplementedException(method, host) {
     _classCallCheck(this, NotImplementedException);
 
-    var method = (0, _locustjsBase.isString)(settings) ? settings : '';
-
-    var _settings = Object.assign({}, settings);
-
-    method = (0, _locustjsBase.isEmpty)(method) ? _settings.method : method;
-    method = (0, _locustjsBase.isEmpty)(method) ? '?' : method;
-    _settings.message = (0, _locustjsBase.isEmpty)(_settings.message) ? "method '".concat(method, "' is not implemented.") : _settings.message;
-    _settings.status = 'method-not-implemented';
-    return _super3.call(this, _settings);
+    return _super3.call(this, {
+      message: "method '".concat(method || '?', "' is not implemented."),
+      status: 'method-not-implemented',
+      host: host
+    });
   }
 
   return NotImplementedException;
@@ -435,23 +359,39 @@ var NotImplementedException = /*#__PURE__*/function (_Exception3) {
 
 exports.NotImplementedException = NotImplementedException;
 
-var ArgumentNullException = /*#__PURE__*/function (_Exception4) {
-  _inherits(ArgumentNullException, _Exception4);
+var IndexOutOfRangeException = /*#__PURE__*/function (_Exception4) {
+  _inherits(IndexOutOfRangeException, _Exception4);
 
-  var _super4 = _createSuper(ArgumentNullException);
+  var _super4 = _createSuper(IndexOutOfRangeException);
 
-  function ArgumentNullException(settings) {
+  function IndexOutOfRangeException(index, min, max, host) {
+    _classCallCheck(this, IndexOutOfRangeException);
+
+    return _super4.call(this, {
+      message: "index".concat((0, _locustjsBase.isEmpty)(index) ? '' : " '".concat(index, "'"), " is out of range [").concat(min || '0', ", ").concat(max, "]."),
+      status: 'index-out-of-range',
+      host: host
+    });
+  }
+
+  return IndexOutOfRangeException;
+}(Exception);
+
+exports.IndexOutOfRangeException = IndexOutOfRangeException;
+
+var ArgumentNullException = /*#__PURE__*/function (_Exception5) {
+  _inherits(ArgumentNullException, _Exception5);
+
+  var _super5 = _createSuper(ArgumentNullException);
+
+  function ArgumentNullException(arg, host) {
     _classCallCheck(this, ArgumentNullException);
 
-    var argName = (0, _locustjsBase.isString)(settings) ? settings : '';
-
-    var _settings = Object.assign({}, settings);
-
-    argName = (0, _locustjsBase.isNull)(argName) ? _settings.arg : argName;
-    argName = (0, _locustjsBase.isEmpty)(argName) ? '?' : argName;
-    _settings.message = (0, _locustjsBase.isNull)(_settings.message) ? "argument '".concat(argName, "' cannot be null or undefined.") : _settings.message;
-    _settings.status = 'argument-null';
-    return _super4.call(this, _settings);
+    return _super5.call(this, {
+      message: "argument '".concat(arg || '?', "' cannot be null or undefined."),
+      status: 'argument-null',
+      host: host
+    });
   }
 
   return ArgumentNullException;
@@ -459,23 +399,19 @@ var ArgumentNullException = /*#__PURE__*/function (_Exception4) {
 
 exports.ArgumentNullException = ArgumentNullException;
 
-var ArgumentEmptyException = /*#__PURE__*/function (_Exception5) {
-  _inherits(ArgumentEmptyException, _Exception5);
+var ArgumentEmptyException = /*#__PURE__*/function (_Exception6) {
+  _inherits(ArgumentEmptyException, _Exception6);
 
-  var _super5 = _createSuper(ArgumentEmptyException);
+  var _super6 = _createSuper(ArgumentEmptyException);
 
-  function ArgumentEmptyException(settings) {
+  function ArgumentEmptyException(arg, host) {
     _classCallCheck(this, ArgumentEmptyException);
 
-    var argName = (0, _locustjsBase.isString)(settings) ? settings : '';
-
-    var _settings = Object.assign({}, settings);
-
-    argName = (0, _locustjsBase.isEmpty)(argName) ? _settings.arg : argName;
-    argName = (0, _locustjsBase.isEmpty)(argName) ? '?' : argName;
-    _settings.message = (0, _locustjsBase.isEmpty)(_settings.message) ? "argument '".concat(argName, "' cannot be null, undefined or empty strings.") : _settings.message;
-    _settings.status = 'argument-empty';
-    return _super5.call(this, _settings);
+    return _super6.call(this, {
+      message: "argument '".concat(arg || '?', "' cannot be null, undefined or empty strings."),
+      status: 'argument-empty',
+      host: host
+    });
   }
 
   return ArgumentEmptyException;
@@ -483,26 +419,39 @@ var ArgumentEmptyException = /*#__PURE__*/function (_Exception5) {
 
 exports.ArgumentEmptyException = ArgumentEmptyException;
 
-var NotInstanceOfException = /*#__PURE__*/function (_Exception6) {
-  _inherits(NotInstanceOfException, _Exception6);
+var ArgumentTypeIncorrectException = /*#__PURE__*/function (_Exception7) {
+  _inherits(ArgumentTypeIncorrectException, _Exception7);
 
-  var _super6 = _createSuper(NotInstanceOfException);
+  var _super7 = _createSuper(ArgumentTypeIncorrectException);
 
-  function NotInstanceOfException(settings) {
+  function ArgumentTypeIncorrectException(arg, type, host) {
+    _classCallCheck(this, ArgumentTypeIncorrectException);
+
+    return _super7.call(this, {
+      message: "argument '".concat(arg || '?', "' has an incorrect type. ").concat(type, " expected."),
+      status: 'argument-type-incorrect',
+      host: host
+    });
+  }
+
+  return ArgumentTypeIncorrectException;
+}(Exception);
+
+exports.ArgumentTypeIncorrectException = ArgumentTypeIncorrectException;
+
+var NotInstanceOfException = /*#__PURE__*/function (_Exception8) {
+  _inherits(NotInstanceOfException, _Exception8);
+
+  var _super8 = _createSuper(NotInstanceOfException);
+
+  function NotInstanceOfException(arg, type, host) {
     _classCallCheck(this, NotInstanceOfException);
 
-    var argName = (0, _locustjsBase.isString)(settings) ? settings : '';
-    var type = arguments.length > 1 && (0, _locustjsBase.isString)(arguments[1]) ? arguments[2] : '';
-
-    var _settings = Object.assign({}, settings);
-
-    argName = (0, _locustjsBase.isEmpty)(argName) ? _settings.arg : argName;
-    argName = (0, _locustjsBase.isEmpty)(argName) ? '?' : argName;
-    type = (0, _locustjsBase.isEmpty)(type) ? _settings.type : type;
-    type = (0, _locustjsBase.isEmpty)(type) ? '?' : type;
-    _settings.message = (0, _locustjsBase.isEmpty)(_settings.message) ? "argument '".concat(argName, "' must be an instance of ").concat(type) : _settings.message;
-    _settings.status = 'not-instance-of';
-    return _super6.call(this, _settings);
+    return _super8.call(this, {
+      message: "argument '".concat(arg || '?', "' must be an instance of ").concat(type),
+      status: 'argument-not-instance-of',
+      host: host
+    });
   }
 
   return NotInstanceOfException;
@@ -510,23 +459,19 @@ var NotInstanceOfException = /*#__PURE__*/function (_Exception6) {
 
 exports.NotInstanceOfException = NotInstanceOfException;
 
-var InvalidHttpMethodException = /*#__PURE__*/function (_Exception7) {
-  _inherits(InvalidHttpMethodException, _Exception7);
+var InvalidHttpMethodException = /*#__PURE__*/function (_Exception9) {
+  _inherits(InvalidHttpMethodException, _Exception9);
 
-  var _super7 = _createSuper(InvalidHttpMethodException);
+  var _super9 = _createSuper(InvalidHttpMethodException);
 
-  function InvalidHttpMethodException(settings) {
+  function InvalidHttpMethodException(method, host) {
     _classCallCheck(this, InvalidHttpMethodException);
 
-    var method = (0, _locustjsBase.isString)(settings) ? settings : '';
-
-    var _settings = Object.assign({}, settings);
-
-    method = (0, _locustjsBase.isEmpty)(method) ? _settings.method : method;
-    method = (0, _locustjsBase.isEmpty)(method) ? '?' : method;
-    _settings.message = (0, _locustjsBase.isEmpty)(_settings.message) ? "invalid http method '".concat(method, "'. expected GET, POST, PUT or DELETE.") : _settings.message;
-    _settings.status = 'invalid-http-method';
-    return _super7.call(this, _settings);
+    return _super9.call(this, {
+      message: "invalid http method '".concat(method || '?', "'. expected GET, POST, PUT or DELETE."),
+      status: 'invalid-http-method',
+      host: host
+    });
   }
 
   return InvalidHttpMethodException;
@@ -536,10 +481,7 @@ exports.InvalidHttpMethodException = InvalidHttpMethodException;
 
 function throwIfInstantiateAbstract(classType, instance, host) {
   if (instance.constructor === classType) {
-    throw new AbstractInstantiationException({
-      type: classType.name,
-      host: host
-    });
+    throw new AbstractInstantiationException(classType.name, host);
   }
 }
 
@@ -551,45 +493,57 @@ function throwIfNotInstanceOf(argName, classType, instance) {
     if (ignoreNull) {
       return;
     } else {
-      throw new ArgumentNullException({
-        arg: argName,
-        host: host
-      });
+      throw new ArgumentNullException(argName, host);
     }
   }
 
-  if (!_instanceof(instance, classType)) {
-    throw new NotInstanceOfException({
-      arg: argName,
-      type: classType.name,
-      host: host
-    });
+  if (!(instance instanceof classType)) {
+    throw new NotInstanceOfException(argName, classType.name, host);
   }
 }
 
 function throwIfNull(arg, argName, host) {
-  if ((0, _locustjsBase.isEmpty)(arg)) {
-    throw new ArgumentNullException({
-      arg: argName,
-      host: host
-    });
+  if ((0, _locustjsBase.isNull)(arg)) {
+    throw new ArgumentNullException(argName, host);
   }
 }
 
 function throwIfEmpty(arg, argName, host) {
   if ((0, _locustjsBase.isEmpty)(arg)) {
-    throw new ArgumentEmptyException({
-      arg: argName,
-      host: host
-    });
+    throw new ArgumentEmptyException(argName, host);
+  }
+}
+
+function throwIfTypeIncorrect(arg, checkType, host) {
+  var type = checkType();
+
+  if (type) {
+    throw new ArgumentTypeIncorrectException(arg, type, host);
+  }
+}
+
+function throwIfIndexOutOfRange(index, min, max, host) {
+  throwIfEmpty(index, 'index', host);
+
+  if (!(0, _locustjsBase.isNumeric)(min)) {
+    min = 0;
+  }
+
+  if (!(0, _locustjsBase.isNumeric)(max)) {
+    max = 0;
+  }
+
+  if (!(0, _locustjsBase.isNumeric)(index)) {
+    index = -1;
+  }
+
+  if (index < min || index > max) {
+    throw new IndexOutOfRangeException(index, min, max, host);
   }
 }
 
 function throwNotImplementedException(method, host) {
-  throw new NotImplementedException({
-    method: method,
-    host: host
-  });
+  throw new NotImplementedException(method, host);
 }
 
 var TryCatch = /*#__PURE__*/function () {
@@ -614,6 +568,16 @@ var TryCatch = /*#__PURE__*/function () {
       this.Result = this._fn(this.Context);
     }
   }, {
+    key: "Exception",
+    get: function get() {
+      return this._exception;
+    },
+    set: function set(value) {
+      if (this._exception === null) {
+        this._exception = value;
+      }
+    }
+  }, {
     key: "Catch",
     value: function Catch(exceptionType, fn) {
       var raise = this.hasError;
@@ -630,7 +594,7 @@ var TryCatch = /*#__PURE__*/function () {
             throw "Catch: callback must be a function";
           }
 
-          raise = _instanceof(this.Exception, exceptionType);
+          raise = this.Exception instanceof exceptionType;
         } else {
           callback = exceptionType;
 
@@ -646,6 +610,11 @@ var TryCatch = /*#__PURE__*/function () {
       }
 
       return this;
+    }
+  }, {
+    key: "hasError",
+    get: function get() {
+      return this.Exception && !this._caught;
     }
   }, {
     key: "Finally",
@@ -667,21 +636,6 @@ var TryCatch = /*#__PURE__*/function () {
 
       return this;
     }
-  }, {
-    key: "Exception",
-    get: function get() {
-      return this._exception;
-    },
-    set: function set(value) {
-      if (this._exception === null) {
-        this._exception = value;
-      }
-    }
-  }, {
-    key: "hasError",
-    get: function get() {
-      return this.Exception && !this._caught;
-    }
   }]);
 
   return TryCatch;
@@ -695,7 +649,7 @@ var Try = function Try(fn, context) {
   try {
     result.Run();
   } catch (e) {
-    if (_instanceof(e, Exception)) {
+    if (e instanceof Exception) {
       result.Exception = e;
     } else {
       result.Exception = new Exception(e);
@@ -708,7 +662,7 @@ var Try = function Try(fn, context) {
 exports.Try = Try;
 
 var Catch = function Catch(x, exceptionType, fn) {
-  if (_instanceof(x, TryCatch) && x.hasError) {
+  if (x instanceof TryCatch && x.hasError) {
     x.Catch(exceptionType, fn);
   }
 };
@@ -716,7 +670,7 @@ var Catch = function Catch(x, exceptionType, fn) {
 exports.Catch = Catch;
 
 var Finally = function Finally(x, fn) {
-  if (_instanceof(x, TryCatch)) {
+  if (x instanceof TryCatch) {
     x.Finally(fn);
   }
 };

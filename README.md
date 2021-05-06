@@ -107,7 +107,7 @@ function f1(a) {
 }
 function f2(a) { console.log(f1(a)) }
 
- Try(_ => f1())
+ Try(f1)
 .Catch(ArgumentNullException, e => console.log(e.message)
 .Catch(e => console.log(`Other exception raised: ${e}`))	// this Catch() is not triggered
 .Finally(_ => console.log('Finished.'))

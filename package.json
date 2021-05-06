@@ -1,11 +1,13 @@
 {
   "name": "locustjs-exception",
-  "version": "1.0.2",
+  "version": "1.1.0",
   "description": "This library provides Exception classes and utilities regarding errors in javascript programs.",
   "main": "index.cjs.js",
   "module": "index.esm.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "babel index.esm.js -o index.cjs.js",
+    "test": "jest",
+    "mest": "node -r esm ./tests/index.js"
   },
   "repository": {
     "type": "git",
@@ -24,5 +26,14 @@
   "homepage": "https://github.com/ironcodev/locustjs-exception#readme",
   "dependencies": {
     "locustjs-base": "^1.0.9"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.13.16",
+    "@babel/core": "^7.14.0",
+    "@babel/plugin-transform-modules-commonjs": "^7.14.0",
+    "@babel/preset-env": "^7.14.1",
+    "babel-jest": "^26.6.3",
+    "esm": "^3.2.25",
+    "jest": "^26.6.3"
   }
 }
