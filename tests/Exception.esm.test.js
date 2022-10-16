@@ -44,6 +44,7 @@ class Fooo extends FooBase {
 class Bar { }
 
 describe('Testing Exceptions', () => {
+    // -------------------- Main Exception class -------------------
     test('Test Exception class', () => {
         const BASENAME = 'MyException',
             CODE = 120,
@@ -112,6 +113,27 @@ describe('Testing Exceptions', () => {
         expect(() => ex.stackTrace = '').toThrow();
         expect(() => ex.stackTrace = '').toThrow();
         expect(() => ex.innerException = '').toThrow();
+    });
+
+    // -------------------- StackTraceItem -------------------
+    test('Test StackTraceItem class', () => {
+        let error = "    at foo (file:///C:/path/to/my/app/test.html:10:5)";
+        let sti = new StackTraceItem(error);
+        
+        expect(sti).toBeDefined();
+        expect(sti.line).toBe(10);
+        expect(sti.col).toBe(5);
+        expect(sti.callSite).toBe('foo');
+        expect(sti.source).toBe('file:///C:/path/to/my/app/test.html');
+        
+        error = "    at <anonymous>:1:10";
+        sti = new StackTraceItem(error);
+
+        expect(sti).toBeDefined();
+        expect(sti.line).toBe(1);
+        expect(sti.col).toBe(10);
+        expect(sti.callSite).toBe('<anonymous>');
+        expect(sti.source).toBe('');
     });
 
     // -------------------- Exception classes -------------------

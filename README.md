@@ -2,21 +2,15 @@
 This library provides a base Exception class and a TryCatch utlity class with three Try(), Catch() and Finally() functions.
 
 ## Exception class
-Exception class is the base class of all excetions.
+Exception class provides a better and more meaningful error compared to javascript's internal object. It is a base class from which all business exceptions should be derived.
 
 ### constructor
-	Exception(settings)
-		settings: an Exception, Error or custom object.
-example
-
 ```javascript
-	const ex = new Exception({
-		message: 'calling web api failed',
-		code: 100324,
-		status: 'call-api-failed',
-		data: { url: '/api/v1/product', method: 'POST' data: { id: 1, title: 'Product II' } }
-	});
+Exception(settings)
 ```
+
+parameters:
+-	`settings`: an Exception, Error or custom object.
 
 ### Properties
 It has the following properties:
@@ -42,6 +36,79 @@ It has the following properties:
 - toString(separator): converts the exception including with its inner exception into a string separated by given separator (default = \n).
 - flatten(): converts he hierarchy of the exception and its inner exceptions into an array.
 
+example 1:
+
+```javascript
+	const ex = new Exception({
+		message: 'calling web api failed',
+		code: 100324,
+		status: 'call-api-failed',
+		data: { url: '/api/v1/product', method: 'POST' data: { id: 1, title: 'Product II' } }
+	});
+```
+
+example 2:
+
+```javascript
+	try {
+		var f;
+
+		console.log(f.test())
+	} catch (e) {
+		const ex = new Exception(e);
+
+		console.log(JSON.stringify(e));
+	}
+
+/*
+{
+ "name": "Exception",
+ "baseName": "TypeError",
+ "message": "Cannot read property 'test' of undefined",
+ "stack": "TypeError: Cannot read properties of undefined (reading 'test')
+    at foo (file:///C:/path/to/my/app/test.html:46:7)
+    at HTMLButtonElement.<anonymous> (file:///C:/path/to/my/app/test.html:51:7)
+    at HTMLButtonElement.dispatch (https://code.jquery.com/jquery-1.8.3.min.js:2:38053)
+    at HTMLButtonElement.u (https://code.jquery.com/jquery-1.8.3.min.js:2:33916)",
+ "stackTrace": {
+ "items": [
+	  {
+	   "line": 46,
+	   "col": 7,
+	   "callSite": "foo",
+	   "source": "file:///C:/path/to/my/app/test.html",
+	   "message": "    at foo (file:///C:/path/to/my/app/test.html:46:7)"
+	  },
+	  {
+	   "line": 51,
+	   "col": 7,
+	   "callSite": "HTMLButtonElement.<anonymous>",
+	   "source": "file:///C:/path/to/my/app/test.html",
+	   "message": "    at HTMLButtonElement.<anonymous> (file:///C:/path/to/my/app/test.html:51:7)"
+	  },
+	  {
+	   "line": 2,
+	   "col": 38053,
+	   "callSite": "HTMLButtonElement.dispatch",
+	   "source": "https://code.jquery.com/jquery-1.8.3.min.js",
+	   "message": "    at HTMLButtonElement.dispatch (https://code.jquery.com/jquery-1.8.3.min.js:2:38053)"
+	  },
+	  {
+	   "line": 2,
+	   "col": 33916,
+	   "callSite": "HTMLButtonElement.u",
+	   "source": "https://code.jquery.com/jquery-1.8.3.min.js",
+	   "message": "    at HTMLButtonElement.u (https://code.jquery.com/jquery-1.8.3.min.js:2:33916)\""
+	  }
+	 ]
+	},
+ "innerException": null,
+ "data": null,
+ "date": "2022-10-16T11:42:10.223Z"
+}
+*/
+```
+
 ### Derived classes
 
 - PropertyReadOnlyException
@@ -51,6 +118,121 @@ It has the following properties:
 - ArgumentEmptyException
 - NotInstanceOfException
 - InvalidHttpMethodException
+
+## StackTrace
+This utility class processes a string stack-trace value and populates a list of `StackTraceItem` objects to facilitate working with a stack-trace information.
+
+### constructor
+```javascript
+	StackTrace(stackTrace: string)
+```
+
+parameters:
+-	`stackTrace`: strack trace of a javascript error object
+
+### Properties
+
+|Property|Type|Description|
+|--|--|--|
+| *items*			|`StackTraceItem`| List of stack-trace items|
+
+example:
+
+```javascript
+	const st = new StackTrace(`"TypeError: Cannot read properties of undefined (reading 'test')
+    at foo (file:///C:/path/to/my/app/test.html:46:7)
+    at HTMLButtonElement.<anonymous> (file:///C:/path/to/my/app/test.html:51:7)
+    at HTMLButtonElement.dispatch (https://code.jquery.com/jquery-1.8.3.min.js:2:38053)
+    at HTMLButtonElement.u (https://code.jquery.com/jquery-1.8.3.min.js:2:33916)"`);
+
+	console.log(JSON.stringify(st, null, ' '));
+
+/*
+{
+ "items": [
+  {
+   "line": 46,
+   "col": 7,
+   "callSite": "foo",
+   "source": "file:///C:/path/to/my/app/test.html",
+   "message": "    at foo (file:///C:/path/to/my/app/test.html:46:7)"
+  },
+  {
+   "line": 51,
+   "col": 7,
+   "callSite": "HTMLButtonElement.<anonymous>",
+   "source": "file:///C:/path/to/my/app/test.html",
+   "message": "    at HTMLButtonElement.<anonymous> (file:///C:/path/to/my/app/test.html:51:7)"
+  },
+  {
+   "line": 2,
+   "col": 38053,
+   "callSite": "HTMLButtonElement.dispatch",
+   "source": "https://code.jquery.com/jquery-1.8.3.min.js",
+   "message": "    at HTMLButtonElement.dispatch (https://code.jquery.com/jquery-1.8.3.min.js:2:38053)"
+  },
+  {
+   "line": 2,
+   "col": 33916,
+   "callSite": "HTMLButtonElement.u",
+   "source": "https://code.jquery.com/jquery-1.8.3.min.js",
+   "message": "    at HTMLButtonElement.u (https://code.jquery.com/jquery-1.8.3.min.js:2:33916)\""
+  }
+ ]
+}
+*/
+```
+
+## StackTraceItem
+This utility class processes one line of a stack-trace information and presents it as an object by extracting its details.
+
+### constructor
+```javascript
+	StackTraceItem(line: string)
+```
+
+parameters:
+-	`line`: one line of a stack-trace information
+
+### Properties
+
+|Property|Type|Description|
+|--|--|--|
+| *line* |`number`| line number of error |
+| *col* |`number`| column number of error |
+| *callSite* |`string`| function name at which the error was raised |
+| *source* |`string`| file name the error was raised at |
+| *message* |`string`| given error info |
+
+example:
+
+```javascript
+	let sti;
+	
+	sti = new StackTraceItem(`"	at foo (file:///C:/path/to/my/app/test.html:46:7)"`);
+
+	console.log(JSON.stringify(sti, null, ' '));
+	/*
+	{
+		line: 46,
+		col: 7,
+		callSite: "foo",
+		source: "file:///C:/path/to/my/app/test.html"
+	}
+	*/
+
+	sti = new StackTraceItem(`"	    at <anonymous>:1:10"`);
+
+	console.log(JSON.stringify(sti, null, ' '));
+	/*
+	{
+		line: 1,
+		col: 10,
+		callSite: "<anonymous>",
+		source: ""
+	}
+	*/
+```
 
 ## Utility functions
 - throwIfInstantiateAbstract(classType, instance, host)
@@ -66,7 +248,11 @@ It has the following properties:
 
 	checks whether arg is empty or not and if so, it throws a new ArgumentEmptyException().
 - throwNotImplementedException
+
 	throws a new NotImplementedException()
+- throwPropertyReadOnlyException
+
+	throws a new PropertyReadOnlyException()
 	
 ## Try/Catch/Finally
 ### examples
