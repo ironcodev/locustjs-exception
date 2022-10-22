@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.Catch = exports.ArgumentTypeIncorrectException = exports.ArgumentNullException = exports.ArgumentEmptyException = exports.AbstractInstantiationException = void 0;
 exports.Exception = Exception;
-exports.TryCatch = exports.Try = exports.StackTraceItem = exports.StackTrace = exports.PropertyReadOnlyException = exports.NotInstanceOfException = exports.NotImplementedException = exports.InvalidHttpMethodException = exports.IndexOutOfRangeException = exports.Finally = void 0;
+exports.TryCatch = exports.Try = exports.StackTraceItem = exports.StackTrace = exports.PropertyReadOnlyException = exports.NotSupportedException = exports.NotInstanceOfException = exports.NotImplementedException = exports.InvalidHttpMethodException = exports.IndexOutOfRangeException = exports.Finally = void 0;
 exports.throwIfEmpty = throwIfEmpty;
 exports.throwIfIndexOutOfRange = throwIfIndexOutOfRange;
 exports.throwIfInstantiateAbstract = throwIfInstantiateAbstract;
@@ -14,6 +14,7 @@ exports.throwIfNotInstanceOf = throwIfNotInstanceOf;
 exports.throwIfNull = throwIfNull;
 exports.throwIfTypeIncorrect = throwIfTypeIncorrect;
 exports.throwNotImplementedException = throwNotImplementedException;
+exports.throwNotSupportedException = throwNotSupportedException;
 exports.throwPropertyReadOnlyException = throwPropertyReadOnlyException;
 var _locustjsBase = require("locustjs-base");
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
@@ -302,12 +303,26 @@ var NotImplementedException = /*#__PURE__*/function (_Exception3) {
   return _createClass(NotImplementedException);
 }(Exception);
 exports.NotImplementedException = NotImplementedException;
-var IndexOutOfRangeException = /*#__PURE__*/function (_Exception4) {
-  _inherits(IndexOutOfRangeException, _Exception4);
-  var _super4 = _createSuper(IndexOutOfRangeException);
+var NotSupportedException = /*#__PURE__*/function (_Exception4) {
+  _inherits(NotSupportedException, _Exception4);
+  var _super4 = _createSuper(NotSupportedException);
+  function NotSupportedException(value, host) {
+    _classCallCheck(this, NotSupportedException);
+    return _super4.call(this, {
+      message: "'".concat(value || '?', "' is not supported."),
+      status: 'not-supported',
+      host: host
+    });
+  }
+  return _createClass(NotSupportedException);
+}(Exception);
+exports.NotSupportedException = NotSupportedException;
+var IndexOutOfRangeException = /*#__PURE__*/function (_Exception5) {
+  _inherits(IndexOutOfRangeException, _Exception5);
+  var _super5 = _createSuper(IndexOutOfRangeException);
   function IndexOutOfRangeException(index, min, max, host) {
     _classCallCheck(this, IndexOutOfRangeException);
-    return _super4.call(this, {
+    return _super5.call(this, {
       message: "index".concat((0, _locustjsBase.isEmpty)(index) ? '' : " '".concat(index, "'"), " is out of range [").concat(min || '0', ", ").concat(max, "]."),
       status: 'index-out-of-range',
       host: host
@@ -316,12 +331,12 @@ var IndexOutOfRangeException = /*#__PURE__*/function (_Exception4) {
   return _createClass(IndexOutOfRangeException);
 }(Exception);
 exports.IndexOutOfRangeException = IndexOutOfRangeException;
-var ArgumentNullException = /*#__PURE__*/function (_Exception5) {
-  _inherits(ArgumentNullException, _Exception5);
-  var _super5 = _createSuper(ArgumentNullException);
+var ArgumentNullException = /*#__PURE__*/function (_Exception6) {
+  _inherits(ArgumentNullException, _Exception6);
+  var _super6 = _createSuper(ArgumentNullException);
   function ArgumentNullException(arg, host) {
     _classCallCheck(this, ArgumentNullException);
-    return _super5.call(this, {
+    return _super6.call(this, {
       message: "argument '".concat(arg || '?', "' cannot be null or undefined."),
       status: 'argument-null',
       host: host
@@ -330,12 +345,12 @@ var ArgumentNullException = /*#__PURE__*/function (_Exception5) {
   return _createClass(ArgumentNullException);
 }(Exception);
 exports.ArgumentNullException = ArgumentNullException;
-var ArgumentEmptyException = /*#__PURE__*/function (_Exception6) {
-  _inherits(ArgumentEmptyException, _Exception6);
-  var _super6 = _createSuper(ArgumentEmptyException);
+var ArgumentEmptyException = /*#__PURE__*/function (_Exception7) {
+  _inherits(ArgumentEmptyException, _Exception7);
+  var _super7 = _createSuper(ArgumentEmptyException);
   function ArgumentEmptyException(arg, host) {
     _classCallCheck(this, ArgumentEmptyException);
-    return _super6.call(this, {
+    return _super7.call(this, {
       message: "argument '".concat(arg || '?', "' cannot be null, undefined or empty strings."),
       status: 'argument-empty',
       host: host
@@ -344,12 +359,12 @@ var ArgumentEmptyException = /*#__PURE__*/function (_Exception6) {
   return _createClass(ArgumentEmptyException);
 }(Exception);
 exports.ArgumentEmptyException = ArgumentEmptyException;
-var ArgumentTypeIncorrectException = /*#__PURE__*/function (_Exception7) {
-  _inherits(ArgumentTypeIncorrectException, _Exception7);
-  var _super7 = _createSuper(ArgumentTypeIncorrectException);
+var ArgumentTypeIncorrectException = /*#__PURE__*/function (_Exception8) {
+  _inherits(ArgumentTypeIncorrectException, _Exception8);
+  var _super8 = _createSuper(ArgumentTypeIncorrectException);
   function ArgumentTypeIncorrectException(arg, type, host) {
     _classCallCheck(this, ArgumentTypeIncorrectException);
-    return _super7.call(this, {
+    return _super8.call(this, {
       message: "argument '".concat(arg || '?', "' has an incorrect type. ").concat(type, " expected."),
       status: 'argument-type-incorrect',
       host: host
@@ -358,12 +373,12 @@ var ArgumentTypeIncorrectException = /*#__PURE__*/function (_Exception7) {
   return _createClass(ArgumentTypeIncorrectException);
 }(Exception);
 exports.ArgumentTypeIncorrectException = ArgumentTypeIncorrectException;
-var NotInstanceOfException = /*#__PURE__*/function (_Exception8) {
-  _inherits(NotInstanceOfException, _Exception8);
-  var _super8 = _createSuper(NotInstanceOfException);
+var NotInstanceOfException = /*#__PURE__*/function (_Exception9) {
+  _inherits(NotInstanceOfException, _Exception9);
+  var _super9 = _createSuper(NotInstanceOfException);
   function NotInstanceOfException(arg, type, host) {
     _classCallCheck(this, NotInstanceOfException);
-    return _super8.call(this, {
+    return _super9.call(this, {
       message: "argument '".concat(arg || '?', "' must be an instance of ").concat(type),
       status: 'argument-not-instance-of',
       host: host
@@ -372,12 +387,12 @@ var NotInstanceOfException = /*#__PURE__*/function (_Exception8) {
   return _createClass(NotInstanceOfException);
 }(Exception);
 exports.NotInstanceOfException = NotInstanceOfException;
-var InvalidHttpMethodException = /*#__PURE__*/function (_Exception9) {
-  _inherits(InvalidHttpMethodException, _Exception9);
-  var _super9 = _createSuper(InvalidHttpMethodException);
+var InvalidHttpMethodException = /*#__PURE__*/function (_Exception10) {
+  _inherits(InvalidHttpMethodException, _Exception10);
+  var _super10 = _createSuper(InvalidHttpMethodException);
   function InvalidHttpMethodException(method, host) {
     _classCallCheck(this, InvalidHttpMethodException);
-    return _super9.call(this, {
+    return _super10.call(this, {
       message: "invalid http method '".concat(method || '?', "'. expected GET, POST, PUT or DELETE."),
       status: 'invalid-http-method',
       host: host
@@ -438,6 +453,9 @@ function throwIfIndexOutOfRange(index, min, max, host) {
 }
 function throwNotImplementedException(method, host) {
   throw new NotImplementedException(method, host);
+}
+function throwNotSupportedException(member, host) {
+  throw new NotSupportedException(member, host);
 }
 function throwPropertyReadOnlyException(propName, host) {
   throw new PropertyReadOnlyException(propName, host);

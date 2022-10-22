@@ -260,6 +260,16 @@ class NotImplementedException extends Exception {
 	}
 }
 
+class NotSupportedException extends Exception {
+	constructor(value, host) {
+		super({
+			message: `'${value || '?'}' is not supported.`,
+			status: 'not-supported',
+			host
+		});
+	}
+}
+
 class IndexOutOfRangeException extends Exception {
 	constructor(index, min, max, host) {
 		super({
@@ -381,6 +391,10 @@ function throwNotImplementedException(method, host) {
 	throw new NotImplementedException(method, host);
 }
 
+function throwNotSupportedException(member, host) {
+	throw new NotSupportedException(member, host);
+}
+
 function throwPropertyReadOnlyException(propName, host) {
 	throw new PropertyReadOnlyException(propName, host);
 }
@@ -500,6 +514,7 @@ export {
 	PropertyReadOnlyException,
 	AbstractInstantiationException,
 	NotImplementedException,
+	NotSupportedException,
 	ArgumentNullException,
 	ArgumentEmptyException,
 	ArgumentTypeIncorrectException,
@@ -513,6 +528,7 @@ export {
 	throwIfEmpty,
 	throwIfTypeIncorrect,
 	throwNotImplementedException,
+	throwNotSupportedException,
 	throwIfIndexOutOfRange,
 	throwPropertyReadOnlyException,
 
