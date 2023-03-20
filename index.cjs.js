@@ -16,7 +16,7 @@ exports.throwIfTypeIncorrect = throwIfTypeIncorrect;
 exports.throwNotImplementedException = throwNotImplementedException;
 exports.throwNotSupportedException = throwNotSupportedException;
 exports.throwPropertyReadOnlyException = throwPropertyReadOnlyException;
-var _locustjsBase = require("locustjs-base");
+var _base = require("@locustjs/base");
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf ? Object.setPrototypeOf.bind() : function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
@@ -58,7 +58,7 @@ exports.StackTraceItem = StackTraceItem;
 var StackTrace = /*#__PURE__*/_createClass(function StackTrace(stack) {
   _classCallCheck(this, StackTrace);
   this.items = [];
-  if ((0, _locustjsBase.isSomeString)(stack)) {
+  if ((0, _base.isSomeString)(stack)) {
     var lines = stack.split('\n');
     if (lines.length) {
       for (var i = 1; i < lines.length; i++) {
@@ -104,17 +104,17 @@ function Exception(settings) {
     _stack = settings.stack;
   } else {
     var _settings = Object.assign({}, settings);
-    _message = (0, _locustjsBase.isString)(_settings.message) ? _settings.message : _message;
-    _code = (0, _locustjsBase.isNumeric)(_settings.code) ? _settings.code : _code;
-    _status = (0, _locustjsBase.isString)(_settings.status) ? _settings.status : _status;
-    _host = (0, _locustjsBase.isString)(_settings.host) ? _settings.host : _host;
+    _message = (0, _base.isString)(_settings.message) ? _settings.message : _message;
+    _code = (0, _base.isNumeric)(_settings.code) ? _settings.code : _code;
+    _status = (0, _base.isString)(_settings.status) ? _settings.status : _status;
+    _host = (0, _base.isString)(_settings.host) ? _settings.host : _host;
     _data = _settings.data;
-    _date = (0, _locustjsBase.isDate)(_settings.date) ? _settings.date : _date;
-    _stack = (0, _locustjsBase.isString)(_settings.stack) ? _settings.stack : _stack;
-    _fileName = (0, _locustjsBase.isString)(_settings.fileName) ? _settings.fileName : _fileName;
-    _lineNumber = (0, _locustjsBase.isNumeric)(_settings.lineNumber) ? _settings.lineNumber : _lineNumber;
-    _columnNumber = (0, _locustjsBase.isNumeric)(_settings.columnNumber) ? _settings.columnNumber : _columnNumber;
-    _baseName = (0, _locustjsBase.isString)(_settings.baseName) ? _settings.baseName : _baseName;
+    _date = (0, _base.isDate)(_settings.date) ? _settings.date : _date;
+    _stack = (0, _base.isString)(_settings.stack) ? _settings.stack : _stack;
+    _fileName = (0, _base.isString)(_settings.fileName) ? _settings.fileName : _fileName;
+    _lineNumber = (0, _base.isNumeric)(_settings.lineNumber) ? _settings.lineNumber : _lineNumber;
+    _columnNumber = (0, _base.isNumeric)(_settings.columnNumber) ? _settings.columnNumber : _columnNumber;
+    _baseName = (0, _base.isString)(_settings.baseName) ? _settings.baseName : _baseName;
     if (_settings.innerException) {
       if (_settings.innerException instanceof Exception) {
         _inner = _settings.innerException;
@@ -125,7 +125,7 @@ function Exception(settings) {
       }
     }
   }
-  if ((0, _locustjsBase.isEmpty)(_stack) && (0, _locustjsBase.isFunction)(Error.captureStackTrace)) {
+  if ((0, _base.isEmpty)(_stack) && (0, _base.isFunction)(Error.captureStackTrace)) {
     try {
       var temp = {};
       Error.captureStackTrace(temp, Exception);
@@ -135,7 +135,7 @@ function Exception(settings) {
       }
     } catch (_unused) {}
   }
-  _stackTrace = (0, _locustjsBase.isEmpty)(_stack) ? null : new StackTrace(_stack);
+  _stackTrace = (0, _base.isEmpty)(_stack) ? null : new StackTrace(_stack);
   var propertyIsReadOnly = function propertyIsReadOnly(propertyName) {
     return function (value) {
       throw new PropertyReadOnlyException(propertyName, _host);
@@ -282,7 +282,7 @@ var AbstractInstantiationException = /*#__PURE__*/function (_Exception2) {
     _classCallCheck(this, AbstractInstantiationException);
     return _super2.call(this, {
       message: "cannot instantiate from abstract class '".concat(type || '?', "'."),
-      status: 'cannot-instantiate-from-abstract',
+      status: 'cannot-instantiate-from-abstract-class',
       host: host
     });
   }
@@ -323,7 +323,7 @@ var IndexOutOfRangeException = /*#__PURE__*/function (_Exception5) {
   function IndexOutOfRangeException(index, min, max, host) {
     _classCallCheck(this, IndexOutOfRangeException);
     return _super5.call(this, {
-      message: "index".concat((0, _locustjsBase.isEmpty)(index) ? '' : " '".concat(index, "'"), " is out of range [").concat(min || '0', ", ").concat(max, "]."),
+      message: "index".concat((0, _base.isEmpty)(index) ? '' : " '".concat(index, "'"), " is out of range [").concat(min || '0', ", ").concat(max, "]."),
       status: 'index-out-of-range',
       host: host
     });
@@ -409,7 +409,7 @@ function throwIfInstantiateAbstract(classType, instance, host) {
 function throwIfNotInstanceOf(argName, classType, instance) {
   var ignoreNull = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
   var host = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : '';
-  if ((0, _locustjsBase.isNull)(instance)) {
+  if ((0, _base.isNull)(instance)) {
     if (ignoreNull) {
       return;
     } else {
@@ -421,12 +421,12 @@ function throwIfNotInstanceOf(argName, classType, instance) {
   }
 }
 function throwIfNull(arg, argName, host) {
-  if ((0, _locustjsBase.isNull)(arg)) {
+  if ((0, _base.isNull)(arg)) {
     throw new ArgumentNullException(argName, host);
   }
 }
 function throwIfEmpty(arg, argName, host) {
-  if ((0, _locustjsBase.isEmpty)(arg)) {
+  if ((0, _base.isEmpty)(arg)) {
     throw new ArgumentEmptyException(argName, host);
   }
 }
@@ -438,13 +438,13 @@ function throwIfTypeIncorrect(arg, checkType, host) {
 }
 function throwIfIndexOutOfRange(index, min, max, host) {
   throwIfEmpty(index, 'index', host);
-  if (!(0, _locustjsBase.isNumeric)(min)) {
+  if (!(0, _base.isNumeric)(min)) {
     min = 0;
   }
-  if (!(0, _locustjsBase.isNumeric)(max)) {
+  if (!(0, _base.isNumeric)(max)) {
     max = 0;
   }
-  if (!(0, _locustjsBase.isNumeric)(index)) {
+  if (!(0, _base.isNumeric)(index)) {
     index = -1;
   }
   if (index < min || index > max) {
@@ -463,7 +463,7 @@ function throwPropertyReadOnlyException(propName, host) {
 var TryCatch = /*#__PURE__*/function () {
   function TryCatch(fn, context) {
     _classCallCheck(this, TryCatch);
-    if (!(0, _locustjsBase.isFunction)(fn)) {
+    if (!(0, _base.isFunction)(fn)) {
       throw "TryCatch.ctor: function expected";
     }
     this.Result = null;
@@ -498,13 +498,13 @@ var TryCatch = /*#__PURE__*/function () {
           throw "Catch cannot be used after Finally";
         }
         if (callback !== undefined) {
-          if (!(0, _locustjsBase.isFunction)(callback)) {
+          if (!(0, _base.isFunction)(callback)) {
             throw "Catch: callback must be a function";
           }
           raise = this.Exception instanceof exceptionType;
         } else {
           callback = exceptionType;
-          if (!(0, _locustjsBase.isFunction)(callback)) {
+          if (!(0, _base.isFunction)(callback)) {
             throw "Catch: expected callback function";
           }
         }
@@ -527,7 +527,7 @@ var TryCatch = /*#__PURE__*/function () {
         throw this.Exception;
       }
       if (fn !== undefined) {
-        if (!(0, _locustjsBase.isFunction)(fn)) {
+        if (!(0, _base.isFunction)(fn)) {
           throw "Finally: callback must be a function";
         }
         if (!this._finalized) {

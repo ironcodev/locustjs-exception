@@ -161,7 +161,7 @@ describe('Testing Exceptions', () => {
         const ex = new AbstractInstantiationException('FooBase', HOST);
 
         expect(ex.message.indexOf('FooBase') > 0).toBe(true);
-        expect(ex.status).toBe('cannot-instantiate-from-abstract');
+        expect(ex.status).toBe('cannot-instantiate-from-abstract-class');
         expect(ex.host).toBe(HOST);
     });
 
@@ -170,7 +170,7 @@ describe('Testing Exceptions', () => {
         const ex = new AbstractInstantiationException(null, HOST);
 
         expect(ex.message.indexOf('?') > 0).toBe(true);
-        expect(ex.status).toBe('cannot-instantiate-from-abstract');
+        expect(ex.status).toBe('cannot-instantiate-from-abstract-class');
         expect(ex.host).toBe(HOST);
     });
 

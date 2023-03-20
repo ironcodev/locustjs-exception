@@ -1,4 +1,4 @@
-import { isString, isSomeString, isObject, isNumeric, isEmpty, isFunction, isNull, isDate } from 'locustjs-base';
+import { isString, isSomeString, isNumeric, isEmpty, isFunction, isNull, isDate } from '@locustjs/base';
 
 class StackTraceItem {
 	constructor(line) {
@@ -244,7 +244,7 @@ class AbstractInstantiationException extends Exception {
 	constructor(type, host) {
 		super({
 			message: `cannot instantiate from abstract class '${type || '?'}'.`,
-			status: 'cannot-instantiate-from-abstract',
+			status: 'cannot-instantiate-from-abstract-class',
 			host
 		});
 	}
