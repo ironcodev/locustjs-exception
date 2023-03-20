@@ -5,13 +5,13 @@ specifiers:
   '@babel/core': ^7.14.0
   '@babel/plugin-transform-modules-commonjs': ^7.14.0
   '@babel/preset-env': ^7.14.1
-  '@locustjs/base': ^1.0.13
+  '@locustjs/base': ^2.0.0
   babel-jest: ^26.6.3
   esm: ^3.2.25
   jest: ^26.6.3
 
 dependencies:
-  '@locustjs/base': 1.0.13
+  '@locustjs/base': 2.0.0
 
 devDependencies:
   '@babel/cli': 7.19.3_@babel+core@7.19.3
@@ -1464,8 +1464,8 @@ packages:
       '@jridgewell/sourcemap-codec': 1.4.14
     dev: true
 
-  /@locustjs/base/1.0.13:
-    resolution: {integrity: sha512-tjlP2SAaYJbonZkKum4XZjQyeM1WAoDlAerwvdV5i9yHzZipULI3y7MU8kfKrpUNpbaUN4jtV3JcD+2k/HOL2w==}
+  /@locustjs/base/2.0.0:
+    resolution: {integrity: sha512-zEChPv38iYyaS515wLncG1/r2w2YeYyrusy4HpHiXvUzQLMycr1vQDG9ijv5MXmX+G+zKtX1CY1B3r0t54Moww==}
     dev: false
 
   /@nicolo-ribaudo/chokidar-2/2.1.8-no-fsevents.3:
