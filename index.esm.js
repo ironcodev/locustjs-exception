@@ -1,4 +1,4 @@
-import { isString, isSomeString, isNumeric, isEmpty, isFunction, isNull, isDate } from '@locustjs/base';
+import { isString, isSomeString, isNumeric, isEmpty, isFunction, isNull, isDate, isObject } from '@locustjs/base';
 
 class StackTraceItem {
 	constructor(line) {
@@ -103,13 +103,23 @@ function Exception(settings) {
 		_columnNumber = isNumeric(_settings.columnNumber) ? _settings.columnNumber : _columnNumber;
 		_baseName = isString(_settings.baseName) ? _settings.baseName : _baseName;
 
-		if (_settings.innerException) {
-			if (_settings.innerException instanceof Exception) {
-				_inner = _settings.innerException;
-			} else if (_settings.innerException instanceof Error) {
-				_inner = new Exception(_settings.innerException);
+		const _innerException = _settings.innerException
+		
+		if (_innerException) {
+			if (_innerException instanceof Exception) {
+				_inner = _innerException;
+			} else if (_innerException instanceof Error || isObject(_innerException)) {
+				_inner = new Exception(_innerException);
+			} else if (isString(_innerException)) {
+				if (_innerException.indexOf(' ') > 0) {
+					_inner = new Exception({ message: _innerException });
+				} else {
+					_inner = new Exception({ status: _innerException });
+				}
+			} else if (isNumeric(_innerException)) {
+				_inner = new Exception({ code: _innerException });
 			} else {
-				throw `Exception.ctor: innerException must be an instance of Error or Exception`
+				throw `Exception.ctor: innerException must be a string, an object or instance of Error/Exception`
 			}
 		}
 	}

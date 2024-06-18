@@ -115,13 +115,28 @@ function Exception(settings) {
     _lineNumber = (0, _base.isNumeric)(_settings.lineNumber) ? _settings.lineNumber : _lineNumber;
     _columnNumber = (0, _base.isNumeric)(_settings.columnNumber) ? _settings.columnNumber : _columnNumber;
     _baseName = (0, _base.isString)(_settings.baseName) ? _settings.baseName : _baseName;
-    if (_settings.innerException) {
-      if (_settings.innerException instanceof Exception) {
-        _inner = _settings.innerException;
-      } else if (_settings.innerException instanceof Error) {
-        _inner = new Exception(_settings.innerException);
+    var _innerException = _settings.innerException;
+    if (_innerException) {
+      if (_innerException instanceof Exception) {
+        _inner = _innerException;
+      } else if (_innerException instanceof Error || (0, _base.isObject)(_innerException)) {
+        _inner = new Exception(_innerException);
+      } else if ((0, _base.isString)(_innerException)) {
+        if (_innerException.indexOf(' ') > 0) {
+          _inner = new Exception({
+            message: _innerException
+          });
+        } else {
+          _inner = new Exception({
+            status: _innerException
+          });
+        }
+      } else if ((0, _base.isNumeric)(_innerException)) {
+        _inner = new Exception({
+          code: _innerException
+        });
       } else {
-        throw "Exception.ctor: innerException must be an instance of Error or Exception";
+        throw "Exception.ctor: innerException must be a string, an object or instance of Error/Exception";
       }
     }
   }
