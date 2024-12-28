@@ -1,5 +1,22 @@
-# locustjs-exception
+# @locustjs/exception
 This library provides a base Exception class and a TryCatch utlity class with three Try(), Catch() and Finally() functions.
+
+## Current Version
+```
+2.0.3
+```
+
+## Installation
+
+NPM
+```
+npm i @locustjs/exception
+```
+
+Yarn
+```
+yarn add @locustjs/exception
+```
 
 ## Exception class
 Exception class provides a better and more meaningful error compared to javascript's internal object. It is a base class from which all business exceptions should be derived.
