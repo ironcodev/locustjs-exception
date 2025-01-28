@@ -1,14 +1,16 @@
-const { getBabelOutputPlugin } = require("@rollup/plugin-babel");
+const { babel } = require("@rollup/plugin-babel");
 
 module.exports = {
   input: "src/index.js",
   plugins: [
-    getBabelOutputPlugin({
+    babel({
+      babelHelpers: "bundled",
       presets: ["@babel/preset-env"],
     }),
   ],
-  output: [
-    { file: "dist/index.cjs.js", format: "cjs" },
-    { file: "dist/index.esm.js", format: "es" },
-  ],
+  output: {
+    file: "./dist/index.js",
+    format: "cjs",
+  },
+  external: ["@locustjs/base"],
 };

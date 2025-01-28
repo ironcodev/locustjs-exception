@@ -231,4 +231,14 @@ Exception.prototype.flatten = function () {
   return arr;
 };
 
-export default Exception;
+class PropertyReadOnlyException extends Exception {
+  constructor(propertyName, host) {
+    super({
+      message: `property '${propertyName || "?"}' is read-only.`,
+      status: "property-readonly",
+      host,
+    });
+  }
+}
+
+export { Exception, PropertyReadOnlyException }

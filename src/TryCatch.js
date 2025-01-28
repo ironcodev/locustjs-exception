@@ -1,12 +1,10 @@
-import { isFunction } from "@locustjs/base";
-import Exception from "./Exception";
+import { Exception } from "./Exception";
+import { throwIfNotFunction, throwIfUndefined } from "./throwIf";
 
 class TryCatch {
   constructor(fn, context) {
-    if (!isFunction(fn)) {
-      throw `TryCatch.ctor: function expected`;
-    }
-
+    throwIfNotFunction(fn, 'fn', 'TryCatch.ctor');
+    
     this.Result = null;
     this.Context = context === undefined ? this : context;
     this._fn = fn;
@@ -36,21 +34,18 @@ class TryCatch {
       }
 
       if (callback !== undefined) {
-        if (!isFunction(callback)) {
-          throw `Catch: callback must be a function`;
-        }
+        throwIfUndefined(callback, 'callback', 'TryCatch.Catch');
 
         raise = this.Exception instanceof exceptionType;
       } else {
         callback = exceptionType;
 
-        if (!isFunction(callback)) {
-          throw `Catch: expected callback function`;
-        }
+        throwIfNotFunction(callback, 'callback', 'TryCatch.Catch');
       }
 
       if (raise) {
         callback(this.Exception, this.Context);
+
         this._caught = true;
       }
     }
@@ -66,12 +61,11 @@ class TryCatch {
     }
 
     if (fn !== undefined) {
-      if (!isFunction(fn)) {
-        throw `Finally: callback must be a function`;
-      }
+      throwIfNotFunction(fn, 'fn', 'TryCatch.Finally');
 
       if (!this._finalized) {
         fn(this.Context);
+
         this._finalized = true;
       }
     }

@@ -1,3 +1,4 @@
+import { isFunction } from "@locustjs/base";
 import {
   StackTraceItem,
   StackTrace,
@@ -23,7 +24,14 @@ import {
   Catch,
   Finally,
   throwIfNullOrEmpty,
-} from "../dist/index.esm";
+  throwIfLessThan,
+  ComparisonFailedException,
+  throwIfLessThanOrEqualTo,
+  throwIfNotInShape,
+  ArgumentNullOrUndefinedException,
+  PropertyMissingException,
+  InvalidValueException
+} from "../src";
 
 class FooBase {
   constructor() {
@@ -223,7 +231,7 @@ describe("Main Exception class", function () {
 
   it("ArgumentTypeIncorrectException", function () {
     const HOST = "my-host";
-    const ex = new ArgumentTypeIncorrectException("arg1", "SomeType", HOST);
+    const ex = new ArgumentTypeIncorrectException("arg1", "?", "SomeType", HOST);
 
     expect(ex.message.indexOf("arg1") > 0).toBe(true);
     expect(ex.message.indexOf("SomeType") > 0).toBe(true);
@@ -233,7 +241,7 @@ describe("Main Exception class", function () {
 
   it("ArgumentTypeIncorrectException", function () {
     const HOST = "my-host";
-    const ex = new ArgumentTypeIncorrectException(null, "SomeType", HOST);
+    const ex = new ArgumentTypeIncorrectException(null, "?", "SomeType", HOST);
 
     expect(ex.message.indexOf("?") > 0).toBe(true);
     expect(ex.message.indexOf("SomeType") > 0).toBe(true);
@@ -331,19 +339,173 @@ describe("Main Exception class", function () {
     }).not.toThrow();
   });
 
-  it("throwIfTypeIncorrect", function () {
+  it("throwIfTypeIncorrect(a, 'a', 'int')", function () {
     const HOST = "my-host";
+    const value = 23;
 
     try {
-      throwIfTypeIncorrect("arg1", () => "Function", HOST);
+      throwIfTypeIncorrect(value, "value", "int", HOST);
+
+      expect(true).toBe(true);
+    } catch (e) {
+      expect(false).toBe(true);
+    }
+  });
+
+  it("throwIfTypeIncorrect(a, 'a', 'string')", function () {
+    const HOST = "my-host";
+    const value = 23;
+
+    try {
+      throwIfTypeIncorrect(value, "value", "string", HOST);
+
+      expect(false).toBe(true);
     } catch (e) {
       expect(e instanceof ArgumentTypeIncorrectException).toBe(true);
       expect(e.host).toBe(HOST);
     }
+  });
 
-    throwIfTypeIncorrect("arg1", () => "", HOST);
+  it("throwIfNotInShape(shape, obj)", function () {
+    const HOST = "my-host";
+    const succeeded = (e) => {
+      expect(true).toBe(true);
+      if (e) {
+        expect(e.host).toBe(HOST);
+      }
+    };
+    const failed = (e) => {
+      expect(false).toBe(true);
+      if (e) {
+        expect(e.host).toBe(HOST);
+      }
+    };
+    const expectSuccess = (obj, shape) => {
+      try {
+        throwIfNotInShape(obj, "obj", shape, HOST);
+        succeeded();
+      } catch (e) {
+          // console.log(e.message)
+          failed(e);
+      }
+    }
+    const expectFail = (obj, shape, ex, fn) => {
+      try {
+        throwIfNotInShape(obj, "obj", shape, HOST);
+        failed();
+      } catch (e) {
+        if (ex) {
+          // console.log(e.message)
+          expect(e instanceof ex).toBe(true);
 
-    expect(true).toBe(true);
+          if (isFunction(fn)) {
+            expect(fn(e)).toBe(true)
+          }
+        }
+        succeeded(e);
+      }
+    }
+    let obj;
+
+    const shape1 = {
+      a: "number",
+      b: "string",
+      c: "bool?",
+      d: "object",
+      fn: "function",
+    };
+
+    expectFail(obj, shape1, ArgumentNullOrUndefinedException);
+    obj = {};
+    expectFail(obj, shape1, PropertyMissingException, ex => ex.propName == 'a');
+    obj = { a: 'aa'};
+    expectFail(obj, shape1, ArgumentTypeIncorrectException, ex => ex.argName == 'a' && ex.type == 'number');
+    obj = { a: 10 };
+    expectFail(obj, shape1, PropertyMissingException, ex => ex.propName == 'b');
+    obj = { a: 10, b: '' };
+    expectFail(obj, shape1, PropertyMissingException, ex => ex.propName == 'd');
+    obj = { a: 10, b: '', d: {} };
+    expectFail(obj, shape1, PropertyMissingException, ex => ex.propName == 'fn');
+    obj = { a: 10, b: '', c: true, d: {} };
+    expectFail(obj, shape1, PropertyMissingException, ex => ex.propName == 'fn');
+    obj = { a: 10, b: '', d: {}, fn: () => 1 };
+    expectSuccess(obj, shape1);
+    
+    const shape2 = {
+      firstName: 'string+?',
+      lastName: 'string+',
+      age: 'int',
+      phone: {
+        required: true,
+        validate: x => /^\d{3,5}$/.test(x)
+      },
+      location: {
+        shape: {
+          country: 'string',
+          city: 'string'
+        }
+      },
+      scores: {
+        array: true,
+        type: 'int',
+        validate: x => x >= 0 && x <= 100
+      }
+    }
+
+    obj = { };
+    expectFail(obj, shape2, PropertyMissingException, ex => ex.propName == 'lastName');
+    obj = { firstName: '' };
+    expectFail(obj, shape2, ArgumentTypeIncorrectException, ex => ex.argName == 'firstName');
+    obj = { firstName: 'fn', lastName: undefined };
+    expectFail(obj, shape2, PropertyMissingException, ex => ex.propName == 'lastName');
+    obj = { firstName: 'fn', lastName: 'ln' };
+    expectFail(obj, shape2, PropertyMissingException, ex => ex.propName == 'age');
+    obj = { firstName: 'fn', lastName: 'ln', age: 10 };
+    expectFail(obj, shape2, PropertyMissingException, ex => ex.propName == 'phone');
+    obj = { firstName: 'fn', lastName: 'ln', age: 10, phone: '12' };
+    expectFail(obj, shape2, InvalidValueException, ex => ex.argName == 'phone');
+    obj = { firstName: 'fn', lastName: 'ln', age: 10, phone: '123', location: undefined };
+    expectSuccess(obj, shape2);
+    obj = { firstName: 'fn', lastName: 'ln', age: 10, phone: '123', location: {} };
+    expectFail(obj, shape2, PropertyMissingException, ex => ex.propName == 'country');
+    obj = { firstName: 'fn', lastName: 'ln', age: 10, phone: '123', location: { country: '' } };
+    expectFail(obj, shape2, PropertyMissingException, ex => ex.propName == 'city');
+    obj = { firstName: 'fn', lastName: 'ln', age: 10, phone: '123', scores:[] };
+    expectSuccess(obj, shape2);
+    obj = { firstName: 'fn', lastName: 'ln', age: 10, phone: '123', scores:['a'] };
+    expectFail(obj, shape2, ArgumentTypeIncorrectException);
+    obj = { firstName: 'fn', lastName: 'ln', age: 10, phone: '123', scores:['10'] };
+    expectFail(obj, shape2, ArgumentTypeIncorrectException);
+    obj = { firstName: 'fn', lastName: 'ln', age: 10, phone: '123', scores:[150] };
+    expectFail(obj, shape2, InvalidValueException);
+    obj = { firstName: 'fn', lastName: 'ln', age: 10, phone: '123', scores:[85] };
+    expectSuccess(obj, shape2);
+  });
+
+  it("throwIfLessThan", function () {
+    const a = 23;
+    const b = 49;
+
+    try {
+      throwIfLessThan(a, b);
+
+      expect(false).toBe(true);
+    } catch (e) {
+      expect(e instanceof ComparisonFailedException).toBe(true);
+    }
+  });
+
+  it("throwIfLessThanOrEqualTo", function () {
+    const a = 23;
+    const b = 23;
+
+    try {
+      throwIfLessThanOrEqualTo(a, b);
+
+      expect(false).toBe(true);
+    } catch (e) {
+      expect(e instanceof ComparisonFailedException).toBe(true);
+    }
   });
 
   it("throwNotImplementedException", function () {

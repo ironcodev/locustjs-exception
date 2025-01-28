@@ -1,6 +1,8 @@
+import { isSomeString } from "@locustjs/base";
+
 class StackTraceItem {
   constructor(line) {
-    if (line.length) {
+    if (isSomeString(line)) {
       let colonIndex1 = line.lastIndexOf(":");
       let colonIndex2 = line.lastIndexOf(":", colonIndex1 - 1);
       let openParIndex = line.indexOf("(");
@@ -29,14 +31,14 @@ class StackTraceItem {
         openParIndex + 1,
         colonIndex2 - openParIndex - 1
       );
+      this.message = line.trim();
     } else {
       this.line = 0;
       this.col = 0;
       this.callSite = "";
       this.source = "";
+      this.message = "";
     }
-
-    this.message = line;
   }
 }
 
