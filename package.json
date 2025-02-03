@@ -1,8 +1,9 @@
 {
   "name": "@locustjs/exception",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "This library provides Exception classes and utilities regarding errors in javascript programs.",
   "main": "dist/index.js",
+  "module": "src/index.js",
   "scripts": {
     "build": "rollup -c",
     "test": "node -r esm test-run.js"
