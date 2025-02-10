@@ -127,21 +127,23 @@ example 2:
 ### Derived classes
 
 - `PropertyReadOnlyException`
-- `AbstractInstantiationException`,
-- `NotImplementedException`,
-- `NotSupportedException`,
-- `IndexOutOfRangeException`,
-- `ArgumentNullException`,
-- `ArgumentUndefinedException`,
-- `ArgumentNullOrUndefinedException`,
-- `ArgumentNullOrEmptyException`,
-- `ArgumentEmptyException`,
-- `ArgumentNothingException`,
-- `ArgumentTypeIncorrectException`,
-- `PropertyMissingException`,
-- `ComparisonFailedException`,
-- `NotInstanceOfException`,
-- `InvalidValueException`,
+- `AbstractInstantiationException`
+- `NotImplementedException`
+- `NotSupportedException`
+- `IndexOutOfRangeException`
+- `ValueNotBetweenException`
+- `ValueIsBetweenException`
+- `ArgumentNullException`
+- `ArgumentUndefinedException`
+- `ArgumentNullOrUndefinedException`
+- `ArgumentNullOrEmptyException`
+- `ArgumentEmptyException`
+- `ArgumentNothingException`
+- `ArgumentTypeIncorrectException`
+- `PropertyMissingException`
+- `ComparisonFailedException`
+- `NotInstanceOfException`
+- `InvalidValueException`
 - `InvalidHttpMethodException`
 
 ## StackTrace
@@ -585,6 +587,8 @@ List of helpers created over `throwIfComparisonFailed`:
 - `throwIfNotEqualTo(a, b)`
 - `throwIfTypeEqualTo(a, b)`
 - `throwIfNotTypeEqualTo(a, b)`
+- `throwIfNotBetween(x, from , to)`
+- `throwIfBetween(x, from , to)`
 
 Example:
 ```javascript

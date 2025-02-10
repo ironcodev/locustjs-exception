@@ -34,6 +34,8 @@ import {
   ArgumentUndefinedException,
   ComparisonFailedException,
   IndexOutOfRangeException,
+  ValueNotBetweenException,
+  ValueIsBetweenException,
   InvalidValueException,
   NotImplementedException,
   NotInstanceOfException,
@@ -384,8 +386,24 @@ function throwIfIndexOutOfRange(index, min, max, host) {
   if (!isNumeric(index)) {
     index = -1;
   }
-  if (index < min || index > max) {
+  if (index < min || index >= max) {
     throw new IndexOutOfRangeException(index, min, max, host);
+  }
+}
+
+function throwIfNotBetween(value, from, to, host) {
+  throwIfEmpty(value, "value", host);
+
+  if (value < from || value > to) {
+    throw new ValueNotBetweenException(value, from, to, host);
+  }
+}
+
+function throwIfBetween(value, from, to, host) {
+  throwIfEmpty(value, "value", host);
+
+  if (value >= from && value <= to) {
+    throw new ValueIsBetweenException(value, from, to, host);
   }
 }
 
@@ -517,6 +535,8 @@ export {
   throwNotImplementedException,
   throwNotSupportedException,
   throwIfIndexOutOfRange,
+  throwIfNotBetween,
+  throwIfBetween,
   throwIfComparisonFailed,
   throwIfLessThan,
   throwIfLessThanOrEqualTo,

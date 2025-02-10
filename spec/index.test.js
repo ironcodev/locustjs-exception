@@ -30,7 +30,11 @@ import {
   throwIfNotInShape,
   ArgumentNullOrUndefinedException,
   PropertyMissingException,
-  InvalidValueException
+  InvalidValueException,
+  throwIfNotBetween,
+  ValueNotBetweenException,
+  throwIfBetween,
+  ValueIsBetweenException
 } from "../src";
 
 class FooBase {
@@ -535,6 +539,38 @@ describe("Main Exception class", function () {
 
     expect(() => {
       throwIfIndexOutOfRange(10, 0, 20);
+    }).not.toThrow();
+  });
+
+  it("throwIfNotBetween", function () {
+    try {
+      throwIfNotBetween(10, 20, 30);
+
+      expect(() => {
+        throw "test";
+      }).toThrow();
+    } catch (ex) {
+      expect(ex instanceof ValueNotBetweenException).toBeTrue();
+    }
+
+    expect(() => {
+      throwIfNotBetween(10, 0, 20);
+    }).not.toThrow();
+  });
+
+  it("throwIfBetween", function () {
+    try {
+      throwIfBetween(10, 0, 20);
+
+      expect(() => {
+        throw "test";
+      }).toThrow();
+    } catch (ex) {
+      expect(ex instanceof ValueIsBetweenException).toBeTrue();
+    }
+
+    expect(() => {
+      throwIfBetween(10, 15, 20);
     }).not.toThrow();
   });
 

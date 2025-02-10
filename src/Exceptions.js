@@ -34,9 +34,9 @@ class NotSupportedException extends Exception {
 class IndexOutOfRangeException extends Exception {
   constructor(index, min, max, host) {
     super({
-      message: `index ${
-        isEmpty(index) ? "" : `'${index}'`
-      } is out of range [${min || "0"}, ${max}].`,
+      message: `index ${isEmpty(index) ? "" : `'${index}'`} is out of range [${
+        min || "0"
+      }, ${max}].`,
       status: "index-out-of-range",
       host,
     });
@@ -45,6 +45,37 @@ class IndexOutOfRangeException extends Exception {
     this.max = max;
   }
 }
+
+class ValueNotBetweenException extends Exception {
+  constructor(value, from, to, host) {
+    super({
+      message: `value ${
+        isEmpty(value) ? "" : `'${value}'`
+      } is not between ${from} and ${to}.`,
+      status: "value-not-between",
+      host,
+    });
+    this.value = value;
+    this.from = from;
+    this.to = to;
+  }
+}
+
+class ValueIsBetweenException extends Exception {
+  constructor(value, from, to, host) {
+    super({
+      message: `value ${
+        isEmpty(value) ? "" : `'${value}'`
+      } should not be between ${from} and ${to}.`,
+      status: "value-is-between",
+      host,
+    });
+    this.value = value;
+    this.from = from;
+    this.to = to;
+  }
+}
+
 class ArgumentNullException extends Exception {
   constructor(argName, host) {
     super({
@@ -225,6 +256,8 @@ export {
   NotImplementedException,
   NotSupportedException,
   IndexOutOfRangeException,
+  ValueNotBetweenException,
+  ValueIsBetweenException,
   ArgumentNullException,
   ArgumentUndefinedException,
   ArgumentNullOrUndefinedException,

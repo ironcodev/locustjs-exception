@@ -468,132 +468,166 @@ var IndexOutOfRangeException = /*#__PURE__*/function (_Exception4) {
   _inherits(IndexOutOfRangeException, _Exception4);
   return _createClass(IndexOutOfRangeException);
 }(Exception);
-var ArgumentNullException = /*#__PURE__*/function (_Exception5) {
-  function ArgumentNullException(argName, host) {
+var ValueNotBetweenException = /*#__PURE__*/function (_Exception5) {
+  function ValueNotBetweenException(value, from, to, host) {
     var _this5;
-    _classCallCheck(this, ArgumentNullException);
-    _this5 = _callSuper(this, ArgumentNullException, [{
-      message: "argument '".concat(argName || "?", "' cannot be null."),
-      status: "argument-null",
+    _classCallCheck(this, ValueNotBetweenException);
+    _this5 = _callSuper(this, ValueNotBetweenException, [{
+      message: "value ".concat(base.isEmpty(value) ? "" : "'".concat(value, "'"), " is not between ").concat(from, " and ").concat(to, "."),
+      status: "value-not-between",
       host: host
     }]);
-    _this5.argName = argName;
+    _this5.value = value;
+    _this5.from = from;
+    _this5.to = to;
     return _this5;
   }
-  _inherits(ArgumentNullException, _Exception5);
-  return _createClass(ArgumentNullException);
+  _inherits(ValueNotBetweenException, _Exception5);
+  return _createClass(ValueNotBetweenException);
 }(Exception);
-var ArgumentUndefinedException = /*#__PURE__*/function (_Exception6) {
-  function ArgumentUndefinedException(argName, host) {
+var ValueIsBetweenException = /*#__PURE__*/function (_Exception6) {
+  function ValueIsBetweenException(value, from, to, host) {
     var _this6;
-    _classCallCheck(this, ArgumentUndefinedException);
-    _this6 = _callSuper(this, ArgumentUndefinedException, [{
-      message: "argument '".concat(argName || "?", "' cannot be undefined."),
-      status: "argument-undefined",
+    _classCallCheck(this, ValueIsBetweenException);
+    _this6 = _callSuper(this, ValueIsBetweenException, [{
+      message: "value ".concat(base.isEmpty(value) ? "" : "'".concat(value, "'"), " should not be between ").concat(from, " and ").concat(to, "."),
+      status: "value-is-between",
       host: host
     }]);
-    _this6.argName = argName;
+    _this6.value = value;
+    _this6.from = from;
+    _this6.to = to;
     return _this6;
   }
-  _inherits(ArgumentUndefinedException, _Exception6);
-  return _createClass(ArgumentUndefinedException);
+  _inherits(ValueIsBetweenException, _Exception6);
+  return _createClass(ValueIsBetweenException);
 }(Exception);
-var ArgumentNullOrUndefinedException = /*#__PURE__*/function (_Exception7) {
-  function ArgumentNullOrUndefinedException(argName, host) {
+var ArgumentNullException = /*#__PURE__*/function (_Exception7) {
+  function ArgumentNullException(argName, host) {
     var _this7;
-    _classCallCheck(this, ArgumentNullOrUndefinedException);
-    _this7 = _callSuper(this, ArgumentNullOrUndefinedException, [{
-      message: "argument '".concat(argName || "?", "' cannot be null or undefined."),
-      status: "argument-null-or-undefined",
+    _classCallCheck(this, ArgumentNullException);
+    _this7 = _callSuper(this, ArgumentNullException, [{
+      message: "argument '".concat(argName || "?", "' cannot be null."),
+      status: "argument-null",
       host: host
     }]);
     _this7.argName = argName;
     return _this7;
   }
-  _inherits(ArgumentNullOrUndefinedException, _Exception7);
-  return _createClass(ArgumentNullOrUndefinedException);
+  _inherits(ArgumentNullException, _Exception7);
+  return _createClass(ArgumentNullException);
 }(Exception);
-var ArgumentNullOrEmptyException = /*#__PURE__*/function (_Exception8) {
-  function ArgumentNullOrEmptyException(argName, host) {
+var ArgumentUndefinedException = /*#__PURE__*/function (_Exception8) {
+  function ArgumentUndefinedException(argName, host) {
     var _this8;
-    _classCallCheck(this, ArgumentNullOrEmptyException);
-    _this8 = _callSuper(this, ArgumentNullOrEmptyException, [{
-      message: "argument '".concat(argName || "?", "' cannot be null, undefined or zero-length string."),
-      status: "argument-null-or-empty",
+    _classCallCheck(this, ArgumentUndefinedException);
+    _this8 = _callSuper(this, ArgumentUndefinedException, [{
+      message: "argument '".concat(argName || "?", "' cannot be undefined."),
+      status: "argument-undefined",
       host: host
     }]);
     _this8.argName = argName;
     return _this8;
   }
-  _inherits(ArgumentNullOrEmptyException, _Exception8);
-  return _createClass(ArgumentNullOrEmptyException);
+  _inherits(ArgumentUndefinedException, _Exception8);
+  return _createClass(ArgumentUndefinedException);
 }(Exception);
-var ArgumentEmptyException = /*#__PURE__*/function (_Exception9) {
-  function ArgumentEmptyException(argName, host) {
+var ArgumentNullOrUndefinedException = /*#__PURE__*/function (_Exception9) {
+  function ArgumentNullOrUndefinedException(argName, host) {
     var _this9;
-    _classCallCheck(this, ArgumentEmptyException);
-    _this9 = _callSuper(this, ArgumentEmptyException, [{
-      message: "argument '".concat(argName || "?", "' cannot be null, undefined or empty strings."),
-      status: "argument-empty",
+    _classCallCheck(this, ArgumentNullOrUndefinedException);
+    _this9 = _callSuper(this, ArgumentNullOrUndefinedException, [{
+      message: "argument '".concat(argName || "?", "' cannot be null or undefined."),
+      status: "argument-null-or-undefined",
       host: host
     }]);
     _this9.argName = argName;
     return _this9;
   }
-  _inherits(ArgumentEmptyException, _Exception9);
-  return _createClass(ArgumentEmptyException);
+  _inherits(ArgumentNullOrUndefinedException, _Exception9);
+  return _createClass(ArgumentNullOrUndefinedException);
 }(Exception);
-var ArgumentNothingException = /*#__PURE__*/function (_Exception10) {
-  function ArgumentNothingException(argName, host) {
+var ArgumentNullOrEmptyException = /*#__PURE__*/function (_Exception10) {
+  function ArgumentNullOrEmptyException(argName, host) {
     var _this10;
-    _classCallCheck(this, ArgumentNothingException);
-    _this10 = _callSuper(this, ArgumentNothingException, [{
-      message: "argument '".concat(argName || "?", "' cannot be null, undefined, empty strings or empty object."),
-      status: "argument-nothing",
+    _classCallCheck(this, ArgumentNullOrEmptyException);
+    _this10 = _callSuper(this, ArgumentNullOrEmptyException, [{
+      message: "argument '".concat(argName || "?", "' cannot be null, undefined or zero-length string."),
+      status: "argument-null-or-empty",
       host: host
     }]);
     _this10.argName = argName;
     return _this10;
   }
-  _inherits(ArgumentNothingException, _Exception10);
+  _inherits(ArgumentNullOrEmptyException, _Exception10);
+  return _createClass(ArgumentNullOrEmptyException);
+}(Exception);
+var ArgumentEmptyException = /*#__PURE__*/function (_Exception11) {
+  function ArgumentEmptyException(argName, host) {
+    var _this11;
+    _classCallCheck(this, ArgumentEmptyException);
+    _this11 = _callSuper(this, ArgumentEmptyException, [{
+      message: "argument '".concat(argName || "?", "' cannot be null, undefined or empty strings."),
+      status: "argument-empty",
+      host: host
+    }]);
+    _this11.argName = argName;
+    return _this11;
+  }
+  _inherits(ArgumentEmptyException, _Exception11);
+  return _createClass(ArgumentEmptyException);
+}(Exception);
+var ArgumentNothingException = /*#__PURE__*/function (_Exception12) {
+  function ArgumentNothingException(argName, host) {
+    var _this12;
+    _classCallCheck(this, ArgumentNothingException);
+    _this12 = _callSuper(this, ArgumentNothingException, [{
+      message: "argument '".concat(argName || "?", "' cannot be null, undefined, empty strings or empty object."),
+      status: "argument-nothing",
+      host: host
+    }]);
+    _this12.argName = argName;
+    return _this12;
+  }
+  _inherits(ArgumentNothingException, _Exception12);
   return _createClass(ArgumentNothingException);
 }(Exception);
-var ArgumentTypeIncorrectException = /*#__PURE__*/function (_Exception11) {
+var ArgumentTypeIncorrectException = /*#__PURE__*/function (_Exception13) {
   function ArgumentTypeIncorrectException(argName, argType, type, host) {
-    var _this11;
+    var _this13;
     _classCallCheck(this, ArgumentTypeIncorrectException);
-    _this11 = _callSuper(this, ArgumentTypeIncorrectException, [{
+    _this13 = _callSuper(this, ArgumentTypeIncorrectException, [{
       message: "argument '".concat(argName || "?", "' has an incorrect type (").concat(argType, "). expected '").concat(type, "'."),
       status: "argument-type-incorrect",
       host: host
     }]);
-    _this11.argName = argName;
-    _this11.argType = argType;
-    _this11.type = type;
-    return _this11;
+    _this13.argName = argName;
+    _this13.argType = argType;
+    _this13.type = type;
+    return _this13;
   }
-  _inherits(ArgumentTypeIncorrectException, _Exception11);
+  _inherits(ArgumentTypeIncorrectException, _Exception13);
   return _createClass(ArgumentTypeIncorrectException);
 }(Exception);
-var PropertyMissingException = /*#__PURE__*/function (_Exception12) {
+var PropertyMissingException = /*#__PURE__*/function (_Exception14) {
   function PropertyMissingException(objName, propName, host) {
-    var _this12;
+    var _this14;
     _classCallCheck(this, PropertyMissingException);
-    _this12 = _callSuper(this, PropertyMissingException, [{
+    _this14 = _callSuper(this, PropertyMissingException, [{
       message: "object '".concat(objName || "?", "' misses '").concat(propName, "' property."),
       status: "property-missing",
       host: host
     }]);
-    _this12.objName = objName;
-    _this12.propName = propName;
-    return _this12;
+    _this14.objName = objName;
+    _this14.propName = propName;
+    return _this14;
   }
-  _inherits(PropertyMissingException, _Exception12);
+  _inherits(PropertyMissingException, _Exception14);
   return _createClass(PropertyMissingException);
 }(Exception);
-var ComparisonFailedException = /*#__PURE__*/function (_Exception13) {
+var ComparisonFailedException = /*#__PURE__*/function (_Exception15) {
   function ComparisonFailedException(arg1Name, arg1Value, arg2Name, arg2Value, operator, host) {
-    var _this13;
+    var _this15;
     _classCallCheck(this, ComparisonFailedException);
     var comparison;
     var not = "not ";
@@ -628,66 +662,66 @@ var ComparisonFailedException = /*#__PURE__*/function (_Exception13) {
         comparison = "?";
         break;
     }
-    _this13 = _callSuper(this, ComparisonFailedException, [{
+    _this15 = _callSuper(this, ComparisonFailedException, [{
       message: "'".concat(arg1Name, "' should ").concat(not, "be ").concat(comparison, " '").concat(arg2Name, "' (").concat(arg1Value, " is ").concat(comparison, " ").concat(arg2Value, ")."),
       status: "comparison-failed",
       host: host
     }]);
-    _this13.arg1Name = arg1Name;
-    _this13.arg1Value = arg1Value;
-    _this13.arg2Name = arg2Name;
-    _this13.arg2Value = arg2Value;
-    _this13.operator = operator;
-    return _this13;
+    _this15.arg1Name = arg1Name;
+    _this15.arg1Value = arg1Value;
+    _this15.arg2Name = arg2Name;
+    _this15.arg2Value = arg2Value;
+    _this15.operator = operator;
+    return _this15;
   }
-  _inherits(ComparisonFailedException, _Exception13);
+  _inherits(ComparisonFailedException, _Exception15);
   return _createClass(ComparisonFailedException);
 }(Exception);
-var NotInstanceOfException = /*#__PURE__*/function (_Exception14) {
+var NotInstanceOfException = /*#__PURE__*/function (_Exception16) {
   function NotInstanceOfException(argName, type, host) {
-    var _this14;
+    var _this16;
     _classCallCheck(this, NotInstanceOfException);
-    _this14 = _callSuper(this, NotInstanceOfException, [{
+    _this16 = _callSuper(this, NotInstanceOfException, [{
       message: "argument '".concat(argName || "?", "' must be an instance of ").concat(type),
       status: "argument-not-instance-of",
       host: host
     }]);
-    _this14.argName = argName;
-    _this14.type = type;
-    return _this14;
+    _this16.argName = argName;
+    _this16.type = type;
+    return _this16;
   }
-  _inherits(NotInstanceOfException, _Exception14);
+  _inherits(NotInstanceOfException, _Exception16);
   return _createClass(NotInstanceOfException);
 }(Exception);
-var InvalidValueException = /*#__PURE__*/function (_Exception15) {
+var InvalidValueException = /*#__PURE__*/function (_Exception17) {
   function InvalidValueException(argName, argValue, host) {
-    var _this15;
+    var _this17;
     _classCallCheck(this, InvalidValueException);
-    _this15 = _callSuper(this, InvalidValueException, [{
+    _this17 = _callSuper(this, InvalidValueException, [{
       message: "argument ".concat(argName || "?", " has an invalid value '").concat(argValue, "'."),
       status: "invalid-value",
       host: host
     }]);
-    _this15.argName = argName;
-    _this15.argValue = argValue;
-    return _this15;
+    _this17.argName = argName;
+    _this17.argValue = argValue;
+    return _this17;
   }
-  _inherits(InvalidValueException, _Exception15);
+  _inherits(InvalidValueException, _Exception17);
   return _createClass(InvalidValueException);
 }(Exception);
-var InvalidHttpMethodException = /*#__PURE__*/function (_Exception16) {
+var InvalidHttpMethodException = /*#__PURE__*/function (_Exception18) {
   function InvalidHttpMethodException(httpMethod, host) {
-    var _this16;
+    var _this18;
     _classCallCheck(this, InvalidHttpMethodException);
-    _this16 = _callSuper(this, InvalidHttpMethodException, [{
+    _this18 = _callSuper(this, InvalidHttpMethodException, [{
       message: "invalid http method '".concat(httpMethod || "?", "'. expected GET, POST, PUT or DELETE."),
       status: "invalid-http-method",
       host: host
     }]);
-    _this16.httpMethod = httpMethod;
-    return _this16;
+    _this18.httpMethod = httpMethod;
+    return _this18;
   }
-  _inherits(InvalidHttpMethodException, _Exception16);
+  _inherits(InvalidHttpMethodException, _Exception18);
   return _createClass(InvalidHttpMethodException);
 }(Exception);
 
@@ -988,8 +1022,20 @@ function throwIfIndexOutOfRange(index, min, max, host) {
   if (!base.isNumeric(index)) {
     index = -1;
   }
-  if (index < min || index > max) {
+  if (index < min || index >= max) {
     throw new IndexOutOfRangeException(index, min, max, host);
+  }
+}
+function throwIfNotBetween(value, from, to, host) {
+  throwIfEmpty(value, "value", host);
+  if (value < from || value > to) {
+    throw new ValueNotBetweenException(value, from, to, host);
+  }
+}
+function throwIfBetween(value, from, to, host) {
+  throwIfEmpty(value, "value", host);
+  if (value >= from && value <= to) {
+    throw new ValueIsBetweenException(value, from, to, host);
   }
 }
 function throwIfComparisonFailed(arg) {
@@ -1215,6 +1261,9 @@ exports.StackTrace = StackTrace;
 exports.StackTraceItem = StackTraceItem;
 exports.Try = Try;
 exports.TryCatch = TryCatch;
+exports.ValueIsBetweenException = ValueIsBetweenException;
+exports.ValueNotBetweenException = ValueNotBetweenException;
+exports.throwIfBetween = throwIfBetween;
 exports.throwIfComparisonFailed = throwIfComparisonFailed;
 exports.throwIfEmpty = throwIfEmpty;
 exports.throwIfEqualTo = throwIfEqualTo;
@@ -1228,6 +1277,7 @@ exports.throwIfLessThanOrEqualTo = throwIfLessThanOrEqualTo;
 exports.throwIfMissingProperty = throwIfMissingProperty;
 exports.throwIfNotArray = throwIfNotArray;
 exports.throwIfNotBasic = throwIfNotBasic;
+exports.throwIfNotBetween = throwIfNotBetween;
 exports.throwIfNotBool = throwIfNotBool;
 exports.throwIfNotDate = throwIfNotDate;
 exports.throwIfNotEqualTo = throwIfNotEqualTo;
