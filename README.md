@@ -3,7 +3,7 @@ This library provides a base Exception class and a TryCatch utlity class with th
 
 ## Current Version
 ```
-2.1.0
+2.2.0
 ```
 
 ## Installation
