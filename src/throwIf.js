@@ -54,7 +54,7 @@ function throwIfNotInstanceOf(
   ignoreNull = false,
   host = ""
 ) {
-  if (isNull(instance)) {
+  if (isNullOrUndefined(instance)) {
     if (ignoreNull) {
       return;
     } else {

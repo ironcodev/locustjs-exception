@@ -699,7 +699,7 @@ function throwIfInstantiateAbstract(classType, instance, host) {
 function throwIfNotInstanceOf(argName, classType, instance) {
   var ignoreNull = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
   var host = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : "";
-  if (base.isNull(instance)) {
+  if (base.isNullOrUndefined(instance)) {
     if (ignoreNull) {
       return;
     } else {
