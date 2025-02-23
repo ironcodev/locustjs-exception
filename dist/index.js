@@ -197,64 +197,76 @@ var StackTrace = /*#__PURE__*/_createClass(function StackTrace(stack) {
           new Exception(new TypeError('this is an error'))
           new Exception(new AnotherException())
   */
-function Exception(settings) {
+function Exception(settings, inner) {
   var _message = "";
   var _code = undefined;
+  var _cause = undefined;
   var _status = undefined;
   var _host = undefined;
   var _data = null;
   var _stack = "";
   var _stackTrace = null;
   var _inner = null;
+  var _innerException;
   var _date = new Date();
   var _fileName = undefined;
   var _lineNumber = undefined;
   var _columnNumber = undefined;
   var _name = this.constructor.name;
   var _baseName = "";
-  if (settings instanceof Error) {
+  if (base.isString(settings)) {
+    _message = settings;
+    _innerException = inner;
+  } else if (settings instanceof Error) {
+    var _settings = Object.assign({}, settings);
+    _cause = _settings.cause;
     _message = settings.message;
     _fileName = settings.fileName;
     _lineNumber = settings.lineNumber;
     _columnNumber = settings.columnNumber;
     _baseName = settings.name;
     _stack = settings.stack;
+    _innerException = inner;
+  } else if (base.isObject(settings)) {
+    var _settings2 = Object.assign({}, settings);
+    _message = base.isString(_settings2.message) ? _settings2.message : _message;
+    _code = base.isNumeric(_settings2.code) ? _settings2.code : _code;
+    _status = base.isString(_settings2.status) ? _settings2.status : _status;
+    _host = base.isString(_settings2.host) ? _settings2.host : _host;
+    _cause = _settings2.cause;
+    _data = _settings2.data;
+    _date = base.isDate(_settings2.date) ? _settings2.date : _date;
+    _stack = base.isString(_settings2.stack) ? _settings2.stack : _stack;
+    _fileName = base.isString(_settings2.fileName) ? _settings2.fileName : _fileName;
+    _lineNumber = base.isNumeric(_settings2.lineNumber) ? _settings2.lineNumber : _lineNumber;
+    _columnNumber = base.isNumeric(_settings2.columnNumber) ? _settings2.columnNumber : _columnNumber;
+    _baseName = base.isString(_settings2.baseName) ? _settings2.baseName : _baseName;
+    _innerException = _settings2.innerException || inner;
   } else {
-    var _settings = Object.assign({}, settings);
-    _message = base.isString(_settings.message) ? _settings.message : _message;
-    _code = base.isNumeric(_settings.code) ? _settings.code : _code;
-    _status = base.isString(_settings.status) ? _settings.status : _status;
-    _host = base.isString(_settings.host) ? _settings.host : _host;
-    _data = _settings.data;
-    _date = base.isDate(_settings.date) ? _settings.date : _date;
-    _stack = base.isString(_settings.stack) ? _settings.stack : _stack;
-    _fileName = base.isString(_settings.fileName) ? _settings.fileName : _fileName;
-    _lineNumber = base.isNumeric(_settings.lineNumber) ? _settings.lineNumber : _lineNumber;
-    _columnNumber = base.isNumeric(_settings.columnNumber) ? _settings.columnNumber : _columnNumber;
-    _baseName = base.isString(_settings.baseName) ? _settings.baseName : _baseName;
-    var _innerException = _settings.innerException;
-    if (_innerException) {
-      if (_innerException instanceof Exception) {
-        _inner = _innerException;
-      } else if (_innerException instanceof Error || base.isObject(_innerException)) {
-        _inner = new Exception(_innerException);
-      } else if (base.isString(_innerException)) {
-        if (_innerException.indexOf(" ") > 0) {
-          _inner = new Exception({
-            message: _innerException
-          });
-        } else {
-          _inner = new Exception({
-            status: _innerException
-          });
-        }
-      } else if (base.isNumeric(_innerException)) {
+    _data = settings;
+    _innerException = inner;
+  }
+  if (_innerException) {
+    if (_innerException instanceof Exception) {
+      _inner = _innerException;
+    } else if (_innerException instanceof Error || base.isObject(_innerException)) {
+      _inner = new Exception(_innerException);
+    } else if (base.isString(_innerException)) {
+      if (_innerException.indexOf(" ") > 0) {
         _inner = new Exception({
-          code: _innerException
+          message: _innerException
         });
       } else {
-        throw "Exception.ctor: innerException must be a string, an object or instance of Error/Exception";
+        _inner = new Exception({
+          status: _innerException
+        });
       }
+    } else if (base.isNumeric(_innerException)) {
+      _inner = new Exception({
+        code: _innerException
+      });
+    } else {
+      throw "Exception.ctor: innerException must be a string, an object or instance of Error/Exception";
     }
   }
   if (base.isEmpty(_stack) && base.isFunction(Error.captureStackTrace)) {
@@ -294,6 +306,13 @@ function Exception(settings) {
         return _code;
       },
       set: propertyIsReadOnly("Exception.code")
+    },
+    cause: {
+      enumerable: true,
+      get: function get() {
+        return _cause;
+      },
+      set: propertyIsReadOnly("Exception.cause")
     },
     status: {
       enumerable: true,

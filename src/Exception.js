@@ -21,15 +21,17 @@ import StackTrace from "./StackTrace";
           new Exception(new TypeError('this is an error'))
           new Exception(new AnotherException())
   */
-function Exception(settings) {
+function Exception(settings, inner) {
   let _message = "";
   let _code = undefined;
+  let _cause = undefined;
   let _status = undefined;
   let _host = undefined;
   let _data = null;
   let _stack = "";
   let _stackTrace = null;
   let _inner = null;
+  let _innerException;
   let _date = new Date();
   let _fileName = undefined;
   let _lineNumber = undefined;
@@ -37,53 +39,59 @@ function Exception(settings) {
   let _name = this.constructor.name;
   let _baseName = "";
 
-  if (settings instanceof Error) {
+  if (isString(settings)) {
+    _message = settings;
+    _innerException = inner;
+  } else if (settings instanceof Error) {
+    const _settings = Object.assign({}, settings);
+
+    _cause = _settings.cause;
     _message = settings.message;
     _fileName = settings.fileName;
     _lineNumber = settings.lineNumber;
     _columnNumber = settings.columnNumber;
     _baseName = settings.name;
     _stack = settings.stack;
-  } else {
+    _innerException = inner;
+  } else if (isObject(settings)) {
     const _settings = Object.assign({}, settings);
 
     _message = isString(_settings.message) ? _settings.message : _message;
     _code = isNumeric(_settings.code) ? _settings.code : _code;
     _status = isString(_settings.status) ? _settings.status : _status;
     _host = isString(_settings.host) ? _settings.host : _host;
+    _cause = _settings.cause;
     _data = _settings.data;
     _date = isDate(_settings.date) ? _settings.date : _date;
     _stack = isString(_settings.stack) ? _settings.stack : _stack;
     _fileName = isString(_settings.fileName) ? _settings.fileName : _fileName;
-    _lineNumber = isNumeric(_settings.lineNumber)
-      ? _settings.lineNumber
-      : _lineNumber;
-    _columnNumber = isNumeric(_settings.columnNumber)
-      ? _settings.columnNumber
-      : _columnNumber;
+    _lineNumber = isNumeric(_settings.lineNumber)? _settings.lineNumber: _lineNumber;
+    _columnNumber = isNumeric(_settings.columnNumber)? _settings.columnNumber: _columnNumber;
     _baseName = isString(_settings.baseName) ? _settings.baseName : _baseName;
+    _innerException = _settings.innerException || inner;
+  } else {
+    _data = settings;
+    _innerException = inner;
+  }
 
-    const _innerException = _settings.innerException;
-
-    if (_innerException) {
-      if (_innerException instanceof Exception) {
-        _inner = _innerException;
-      } else if (
-        _innerException instanceof Error ||
-        isObject(_innerException)
-      ) {
-        _inner = new Exception(_innerException);
-      } else if (isString(_innerException)) {
-        if (_innerException.indexOf(" ") > 0) {
-          _inner = new Exception({ message: _innerException });
-        } else {
-          _inner = new Exception({ status: _innerException });
-        }
-      } else if (isNumeric(_innerException)) {
-        _inner = new Exception({ code: _innerException });
+  if (_innerException) {
+    if (_innerException instanceof Exception) {
+      _inner = _innerException;
+    } else if (
+      _innerException instanceof Error ||
+      isObject(_innerException)
+    ) {
+      _inner = new Exception(_innerException);
+    } else if (isString(_innerException)) {
+      if (_innerException.indexOf(" ") > 0) {
+        _inner = new Exception({ message: _innerException });
       } else {
-        throw `Exception.ctor: innerException must be a string, an object or instance of Error/Exception`;
+        _inner = new Exception({ status: _innerException });
       }
+    } else if (isNumeric(_innerException)) {
+      _inner = new Exception({ code: _innerException });
+    } else {
+      throw `Exception.ctor: innerException must be a string, an object or instance of Error/Exception`;
     }
   }
 
@@ -126,6 +134,13 @@ function Exception(settings) {
         return _code;
       },
       set: propertyIsReadOnly("Exception.code"),
+    },
+    cause: {
+      enumerable: true,
+      get: function () {
+        return _cause;
+      },
+      set: propertyIsReadOnly("Exception.cause"),
     },
     status: {
       enumerable: true,

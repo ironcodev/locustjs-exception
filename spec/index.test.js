@@ -53,7 +53,7 @@ class Fooo extends FooBase {
 class Bar {}
 
 describe("Main Exception class", function () {
-  it("MyException", function () {
+  it("MyException 1", function () {
     const BASENAME = "MyException",
       CODE = 120,
       STATUS = "some-exception",
@@ -77,6 +77,75 @@ describe("Main Exception class", function () {
       columnNumber: COLUMNNUMBER,
       innerException: INNEREXCEPTION,
     });
+
+    expect(ex).toBeDefined();
+    expect(ex.name).toBe("Exception");
+    expect(ex.baseName).toBe(BASENAME);
+    expect(ex.code).toBe(CODE);
+    expect(ex.status).toBe(STATUS);
+    expect(ex.host).toBe(HOST);
+    expect(ex.message).toBe(MESSAGE);
+    expect(ex.data).toBe(DATA);
+    expect(ex.fileName).toBe(FILENAME);
+    expect(ex.lineNumber).toBe(LINENUMBER);
+    expect(ex.columnNumber).toBe(COLUMNNUMBER);
+    expect(ex.stack).toBeDefined();
+    expect(ex.stackTrace).toBeDefined();
+    expect(ex.stackTrace instanceof StackTrace).toBe(true);
+    expect(ex.innerException).toBeDefined();
+    expect(ex.innerException instanceof Exception).toBe(true);
+    expect(ex.innerException.message).toBe("some inner error");
+
+    const messages = ex.toString().split("\n");
+
+    expect(messages.length).toBe(2);
+    expect(messages[0]).toBe(MESSAGE);
+
+    const arrMessages = ex.flatten();
+
+    expect(arrMessages.length).toBe(2);
+    expect(arrMessages[0]).toBe(ex);
+    expect(arrMessages[1]).toBe(ex.innerException);
+
+    expect(() => (ex.name = "")).toThrow();
+    expect(() => (ex.baseName = "")).toThrow();
+    expect(() => (ex.code = "")).toThrow();
+    expect(() => (ex.status = "")).toThrow();
+    expect(() => (ex.host = "")).toThrow();
+    expect(() => (ex.message = "")).toThrow();
+    expect(() => (ex.data = "")).toThrow();
+    expect(() => (ex.fileName = "")).toThrow();
+    expect(() => (ex.lineNumber = "")).toThrow();
+    expect(() => (ex.columnNumber = "")).toThrow();
+    expect(() => (ex.stack = "")).toThrow();
+    expect(() => (ex.stackTrace = "")).toThrow();
+    expect(() => (ex.stackTrace = "")).toThrow();
+    expect(() => (ex.innerException = "")).toThrow();
+  });
+
+  it("MyException 2", function () {
+    const BASENAME = "MyException",
+      CODE = 120,
+      STATUS = "some-exception",
+      HOST = "my-host",
+      MESSAGE = "this is an exception",
+      DATA = 25,
+      FILENAME = "test.esm.js",
+      LINENUMBER = 100,
+      COLUMNNUMBER = 25,
+      INNEREXCEPTION = new Error("some inner error");
+
+    const ex = new Exception({
+      baseName: BASENAME,
+      code: CODE,
+      status: STATUS,
+      host: HOST,
+      message: MESSAGE,
+      data: DATA,
+      fileName: FILENAME,
+      lineNumber: LINENUMBER,
+      columnNumber: COLUMNNUMBER
+    }, INNEREXCEPTION);
 
     expect(ex).toBeDefined();
     expect(ex.name).toBe("Exception");
